@@ -9,109 +9,109 @@ create table #occ (
  uk_dog int,
  rasch_date date
 )
-insert into #occ  -- входящее сальдо
-select distinct ns.Счет, ns.[Номер услуги], tui.РодительНомер, tu1.Наименование, tu2.Наименование, ns.ДоговорУК, @rasch_date  
-from stack.НСальдо ns inner join stack.[Типы услуг иерархия] tui on tui.ПотомокНомер = ns.[Номер услуги] 
-inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = ns.[Номер услуги]
-inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = tui.РодительНомер
-where CAST([Месяц расчета]	as date) = @rasch_date and Поставщик = 1305 and tui.РодительТип=2 and ns.Сумма <> 0
+insert into #occ  -- ГўГµГ®Г¤ГїГ№ГҐГҐ Г±Г Г«ГјГ¤Г®
+select distinct ns.Г‘Г·ГҐГІ, ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], tui.ГђГ®Г¤ГЁГІГҐГ«ГјГЌГ®Г¬ГҐГ°, tu1.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, tu2.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, ns.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, @rasch_date  
+from stack.ГЌГ‘Г Г«ГјГ¤Г® ns inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ ГЁГҐГ°Г Г°ГµГЁГї] tui on tui.ГЏГ®ГІГ®Г¬Г®ГЄГЌГ®Г¬ГҐГ° = ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] 
+inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu1 on tu1.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ]
+inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu2 on tu2.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = tui.ГђГ®Г¤ГЁГІГҐГ«ГјГЌГ®Г¬ГҐГ°
+where CAST([ГЊГҐГ±ГїГ¶ Г°Г Г±Г·ГҐГІГ ]	as date) = @rasch_date and ГЏГ®Г±ГІГ ГўГ№ГЁГЄ = 1305 and tui.ГђГ®Г¤ГЁГІГҐГ«ГјГ’ГЁГЇ=2 and ns.Г‘ГіГ¬Г¬Г  <> 0
  --drop table #occ
-union	-- начисления
-select distinct ns.Счет, ns.[Номер услуги], tui.РодительНомер, tu1.Наименование, tu2.Наименование, ns.ДоговорУК, @rasch_date  
-from stack.НТариф ns inner join stack.[Типы услуг иерархия] tui on tui.ПотомокНомер = ns.[Номер услуги] 
-inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = ns.[Номер услуги]
-inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = tui.РодительНомер
-where CAST([Месяц расчета]	as date) = @rasch_date and Поставщик = 1305 and tui.РодительТип=2 and ns.Сумма <> 0
+union	-- Г­Г Г·ГЁГ±Г«ГҐГ­ГЁГї
+select distinct ns.Г‘Г·ГҐГІ, ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], tui.ГђГ®Г¤ГЁГІГҐГ«ГјГЌГ®Г¬ГҐГ°, tu1.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, tu2.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, ns.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, @rasch_date  
+from stack.ГЌГ’Г Г°ГЁГґ ns inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ ГЁГҐГ°Г Г°ГµГЁГї] tui on tui.ГЏГ®ГІГ®Г¬Г®ГЄГЌГ®Г¬ГҐГ° = ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] 
+inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu1 on tu1.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ]
+inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu2 on tu2.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = tui.ГђГ®Г¤ГЁГІГҐГ«ГјГЌГ®Г¬ГҐГ°
+where CAST([ГЊГҐГ±ГїГ¶ Г°Г Г±Г·ГҐГІГ ]	as date) = @rasch_date and ГЏГ®Г±ГІГ ГўГ№ГЁГЄ = 1305 and tui.ГђГ®Г¤ГЁГІГҐГ«ГјГ’ГЁГЇ=2 and ns.Г‘ГіГ¬Г¬Г  <> 0
 
-union 		 -- разовые
-select distinct ns.Счет, ns.[Номер услуги], tui.РодительНомер, tu1.Наименование, tu2.Наименование, ns.ДоговорУК,  @rasch_date  
-from stack.[РН список] ns inner join stack.[Типы услуг иерархия] tui on tui.ПотомокНомер = ns.[Номер услуги] 
-inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = ns.[Номер услуги]
-inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = tui.РодительНомер
-where CAST([Месяц расчета]	as date) = @rasch_date and Поставщик = 1305 and tui.РодительТип=2 and ns.Сумма <> 0
+union 		 -- Г°Г Г§Г®ГўГ»ГҐ
+select distinct ns.Г‘Г·ГҐГІ, ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], tui.ГђГ®Г¤ГЁГІГҐГ«ГјГЌГ®Г¬ГҐГ°, tu1.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, tu2.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, ns.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ,  @rasch_date  
+from stack.[ГђГЌ Г±ГЇГЁГ±Г®ГЄ] ns inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ ГЁГҐГ°Г Г°ГµГЁГї] tui on tui.ГЏГ®ГІГ®Г¬Г®ГЄГЌГ®Г¬ГҐГ° = ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] 
+inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu1 on tu1.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ]
+inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu2 on tu2.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = tui.ГђГ®Г¤ГЁГІГҐГ«ГјГЌГ®Г¬ГҐГ°
+where CAST([ГЊГҐГ±ГїГ¶ Г°Г Г±Г·ГҐГІГ ]	as date) = @rasch_date and ГЏГ®Г±ГІГ ГўГ№ГЁГЄ = 1305 and tui.ГђГ®Г¤ГЁГІГҐГ«ГјГ’ГЁГЇ=2 and ns.Г‘ГіГ¬Г¬Г  <> 0
  -- select distinct  * from #occ
  -- select * from #occ where occ_id=37368
-union 	-- платежи
-select distinct rsp.Счет, rsp.НомерУслуги, rsp.Услуга, tu1.Наименование, tu2.Наименование, rsp.УКДоговор, @rasch_date  
-from stack.[Расчеты с поставщиками (детально)] rsp inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = rsp.НомерУслуги
-inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = rsp.Услуга
-where CAST(rsp.ДатаОплаты as date) BETWEEN @rasch_date and cast(EOMONTH(@rasch_date) as date) and Поставщик = 1305 
-and rsp.Сумма <> 0 and rsp.ПризнакКоррекции <> 1
+union 	-- ГЇГ«Г ГІГҐГ¦ГЁ
+select distinct rsp.Г‘Г·ГҐГІ, rsp.ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ, rsp.Г“Г±Г«ГіГЈГ , tu1.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, tu2.ГЌГ ГЁГ¬ГҐГ­Г®ГўГ Г­ГЁГҐ, rsp.Г“ГЉГ„Г®ГЈГ®ГўГ®Г°, @rasch_date  
+from stack.[ГђГ Г±Г·ГҐГІГ» Г± ГЇГ®Г±ГІГ ГўГ№ГЁГЄГ Г¬ГЁ (Г¤ГҐГІГ Г«ГјГ­Г®)] rsp inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu1 on tu1.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = rsp.ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ
+inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu2 on tu2.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = rsp.Г“Г±Г«ГіГЈГ 
+where CAST(rsp.Г„Г ГІГ ГЋГЇГ«Г ГІГ» as date) BETWEEN @rasch_date and cast(EOMONTH(@rasch_date) as date) and ГЏГ®Г±ГІГ ГўГ№ГЁГЄ = 1305 
+and rsp.Г‘ГіГ¬Г¬Г  <> 0 and rsp.ГЏГ°ГЁГ§Г­Г ГЄГЉГ®Г°Г°ГҐГЄГ¶ГЁГЁ <> 1 
 
 --occ_id, ls, rasch_date, serv_id, serv_name, ed, vh_saldo, nach_ob, nach_summ, uk_id
 
-select #occ.occ_id as ЛС, (select Номер from stack.[Лицевые счета] where row_id = #occ.occ_id) as Номер_ЛС, #occ.rasch_date as Месяц, 
-#occ.service as Услуга, #occ.uk_dog, Ед_изм, ИспользованТариф as Тариф, isnull(case when nt.Начисл_сумма <> 0 then nt.Начисл_объем else 0 end,0) as Начисл_объем,
-isnull(nt.Начисл_сумма,0) as Начисл_сумма, isnull(rn.Сумма_разовых,0) as Разовые, isnull(rn.Примечание,'') as Разовые_прим, isnull(opl.Сумма,0) as Сумма_платежей,
-isnull(ns.Сумма,0) as ВХ_Сальдо, (isnull(ns.Сумма,0) + isnull(nt.Начисл_сумма,0) + isnull(rn.Сумма_разовых,0)) as ИСХ_Сальдо, 
--- последняя оплата
-(select MAX(lopl.Дата) from (
-  select MAX(so.Дата) as Дата 
-  from stack.[Список оплаты] so inner join stack.[Оплата по видам] opv on so.ROW_ID = opv.[Распределение-Платеж]
-  inner join stack.[Типы услуг] tu on tu.ROW_ID = opv.[Распределение-Услуга] 
-  inner join stack.Организации org on opv.[Распределение-УК] = org.ROW_ID
-  inner join stack.[УК договоры] ukd on ukd.[Организация-УКДоговор] = org.ROW_ID
-  where ukd.ROW_ID = #occ.uk_dog and so.[Счет-Оплата] = #occ.occ_id and tu.[Номер услуги] = #occ.service
+select #occ.occ_id as Г‹Г‘, (select ГЌГ®Г¬ГҐГ° from stack.[Г‹ГЁГ¶ГҐГўГ»ГҐ Г±Г·ГҐГІГ ] where row_id = #occ.occ_id) as ГЌГ®Г¬ГҐГ°_Г‹Г‘, #occ.rasch_date as ГЊГҐГ±ГїГ¶, 
+#occ.service as Г“Г±Г«ГіГЈГ , #occ.uk_dog, Г…Г¤_ГЁГ§Г¬, Г€Г±ГЇГ®Г«ГјГ§Г®ГўГ Г­Г’Г Г°ГЁГґ as Г’Г Г°ГЁГґ, isnull(case when nt.ГЌГ Г·ГЁГ±Г«_Г±ГіГ¬Г¬Г  <> 0 then nt.ГЌГ Г·ГЁГ±Г«_Г®ГЎГєГҐГ¬ else 0 end,0) as ГЌГ Г·ГЁГ±Г«_Г®ГЎГєГҐГ¬,
+isnull(nt.ГЌГ Г·ГЁГ±Г«_Г±ГіГ¬Г¬Г ,0) as ГЌГ Г·ГЁГ±Г«_Г±ГіГ¬Г¬Г , isnull(rn.Г‘ГіГ¬Г¬Г _Г°Г Г§Г®ГўГ»Гµ,0) as ГђГ Г§Г®ГўГ»ГҐ, isnull(rn.ГЏГ°ГЁГ¬ГҐГ·Г Г­ГЁГҐ,'') as ГђГ Г§Г®ГўГ»ГҐ_ГЇГ°ГЁГ¬, isnull(opl.Г‘ГіГ¬Г¬Г ,0) as Г‘ГіГ¬Г¬Г _ГЇГ«Г ГІГҐГ¦ГҐГ©,
+isnull(ns.Г‘ГіГ¬Г¬Г ,0) as Г‚Г•_Г‘Г Г«ГјГ¤Г®, (isnull(ns.Г‘ГіГ¬Г¬Г ,0) + isnull(nt.ГЌГ Г·ГЁГ±Г«_Г±ГіГ¬Г¬Г ,0) + isnull(rn.Г‘ГіГ¬Г¬Г _Г°Г Г§Г®ГўГ»Гµ,0)) as Г€Г‘Г•_Г‘Г Г«ГјГ¤Г®, 
+-- ГЇГ®Г±Г«ГҐГ¤Г­ГїГї Г®ГЇГ«Г ГІГ 
+(select MAX(lopl.Г„Г ГІГ ) from (
+  select MAX(so.Г„Г ГІГ ) as Г„Г ГІГ  
+  from stack.[Г‘ГЇГЁГ±Г®ГЄ Г®ГЇГ«Г ГІГ»] so inner join stack.[ГЋГЇГ«Г ГІГ  ГЇГ® ГўГЁГ¤Г Г¬] opv on so.ROW_ID = opv.[ГђГ Г±ГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГҐ-ГЏГ«Г ГІГҐГ¦]
+  inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu on tu.ROW_ID = opv.[ГђГ Г±ГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГҐ-Г“Г±Г«ГіГЈГ ] 
+  inner join stack.ГЋГ°ГЈГ Г­ГЁГ§Г Г¶ГЁГЁ org on opv.[ГђГ Г±ГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГҐ-Г“ГЉ] = org.ROW_ID
+  inner join stack.[Г“ГЉ Г¤Г®ГЈГ®ГўГ®Г°Г»] ukd on ukd.[ГЋГ°ГЈГ Г­ГЁГ§Г Г¶ГЁГї-Г“ГЉГ„Г®ГЈГ®ГўГ®Г°] = org.ROW_ID
+  where ukd.ROW_ID = #occ.uk_dog and so.[Г‘Г·ГҐГІ-ГЋГЇГ«Г ГІГ ] = #occ.occ_id and tu.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service
   union
-  select MAX(ДатаОплаты) as Дата from stack.[Расчеты с поставщиками (детально)]
-  where УКДоговор= #occ.uk_dog and Счет= #occ.occ_id and НомерУслуги= #occ.service) as lopl
-  ) as Посл_опл, 
--- счетчики
-isnull ((select sc.Показание from 
-	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
-	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
-	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
-	where tu.[Номер услуги] = #occ.service_group
-	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
-	as sc where sc.sch_num=1 and Дата = MaxDate),null) as SCH_1,
-isnull ((select sc.Показание from 
-	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
-	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
-	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
-	where tu.[Номер услуги] = #occ.service_group
-	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
-	as sc where sc.sch_num=2 and Дата = MaxDate),null) as SCH_2,
-isnull ((select sc.Показание from 
-	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
-	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
-	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
-	where tu.[Номер услуги] = #occ.service_group
-	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
-	as sc where sc.sch_num=3 and Дата = MaxDate),null) as SCH_3,
-isnull ((select sc.Показание from 
-	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
-	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
-	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
-	where tu.[Номер услуги] = #occ.service_group
-	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
-	as sc where sc.sch_num=4 and Дата = MaxDate),null) as SCH_4,
-isnull ((select sc.Показание from 
-	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
-	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
-	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
-	where tu.[Номер услуги] = #occ.service_group
-	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
-	as sc where sc.sch_num=5 and Дата = MaxDate),null) as SCH_5
+  select MAX(Г„Г ГІГ ГЋГЇГ«Г ГІГ») as Г„Г ГІГ  from stack.[ГђГ Г±Г·ГҐГІГ» Г± ГЇГ®Г±ГІГ ГўГ№ГЁГЄГ Г¬ГЁ (Г¤ГҐГІГ Г«ГјГ­Г®)]
+  where Г“ГЉГ„Г®ГЈГ®ГўГ®Г°= #occ.uk_dog and Г‘Г·ГҐГІ= #occ.occ_id and ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ= #occ.service) as lopl
+  ) as ГЏГ®Г±Г«_Г®ГЇГ«, 
+-- Г±Г·ГҐГІГ·ГЁГЄГЁ
+isnull ((select sc.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ from 
+	(SELECT ps.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ, ROW_NUMBER() over(order by so.[N ГЇ/ГЇ]) as sch_num, cast (Г„Г ГІГ  as date) as Г„Г ГІГ , cast(Max(Г„Г ГІГ ) OVER() as date)  as MaxDate 
+	from stack.[ГЏГ®ГЄГ Г§Г Г­ГЁГї Г±Г·ГҐГІГ·ГЁГЄГ®Гў] ps inner join stack.[Г‘ГЇГЁГ±Г®ГЄ Г®ГЎГєГҐГЄГІГ®Гў] so on so.ROW_ID = ps.[ГЋГЎГєГҐГЄГІ-ГЏГ®ГЄГ Г§Г Г­ГЁГї]
+	inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu on tu.ROW_ID =ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г“Г±Г«ГіГЈГ ]
+	where tu.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service_group
+	and ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г‘Г·ГҐГІ]=#occ.occ_id	and cast(ps.[ГђГ Г±Г·ГҐГІГ­Г»Г© Г¬ГҐГ±ГїГ¶] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=1 and Г„Г ГІГ  = MaxDate),null) as SCH_1,
+isnull ((select sc.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ from 
+	(SELECT ps.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ, ROW_NUMBER() over(order by so.[N ГЇ/ГЇ]) as sch_num, cast (Г„Г ГІГ  as date) as Г„Г ГІГ , cast(Max(Г„Г ГІГ ) OVER() as date)  as MaxDate 
+	from stack.[ГЏГ®ГЄГ Г§Г Г­ГЁГї Г±Г·ГҐГІГ·ГЁГЄГ®Гў] ps inner join stack.[Г‘ГЇГЁГ±Г®ГЄ Г®ГЎГєГҐГЄГІГ®Гў] so on so.ROW_ID = ps.[ГЋГЎГєГҐГЄГІ-ГЏГ®ГЄГ Г§Г Г­ГЁГї]
+	inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu on tu.ROW_ID =ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г“Г±Г«ГіГЈГ ]
+	where tu.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service_group
+	and ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г‘Г·ГҐГІ]=#occ.occ_id	and cast(ps.[ГђГ Г±Г·ГҐГІГ­Г»Г© Г¬ГҐГ±ГїГ¶] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=2 and Г„Г ГІГ  = MaxDate),null) as SCH_2,
+isnull ((select sc.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ from 
+	(SELECT ps.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ, ROW_NUMBER() over(order by so.[N ГЇ/ГЇ]) as sch_num, cast (Г„Г ГІГ  as date) as Г„Г ГІГ , cast(Max(Г„Г ГІГ ) OVER() as date)  as MaxDate 
+	from stack.[ГЏГ®ГЄГ Г§Г Г­ГЁГї Г±Г·ГҐГІГ·ГЁГЄГ®Гў] ps inner join stack.[Г‘ГЇГЁГ±Г®ГЄ Г®ГЎГєГҐГЄГІГ®Гў] so on so.ROW_ID = ps.[ГЋГЎГєГҐГЄГІ-ГЏГ®ГЄГ Г§Г Г­ГЁГї]
+	inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu on tu.ROW_ID =ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г“Г±Г«ГіГЈГ ]
+	where tu.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service_group
+	and ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г‘Г·ГҐГІ]=#occ.occ_id	and cast(ps.[ГђГ Г±Г·ГҐГІГ­Г»Г© Г¬ГҐГ±ГїГ¶] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=3 and Г„Г ГІГ  = MaxDate),null) as SCH_3,
+isnull ((select sc.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ from 
+	(SELECT ps.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ, ROW_NUMBER() over(order by so.[N ГЇ/ГЇ]) as sch_num, cast (Г„Г ГІГ  as date) as Г„Г ГІГ , cast(Max(Г„Г ГІГ ) OVER() as date)  as MaxDate 
+	from stack.[ГЏГ®ГЄГ Г§Г Г­ГЁГї Г±Г·ГҐГІГ·ГЁГЄГ®Гў] ps inner join stack.[Г‘ГЇГЁГ±Г®ГЄ Г®ГЎГєГҐГЄГІГ®Гў] so on so.ROW_ID = ps.[ГЋГЎГєГҐГЄГІ-ГЏГ®ГЄГ Г§Г Г­ГЁГї]
+	inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu on tu.ROW_ID =ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г“Г±Г«ГіГЈГ ]
+	where tu.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service_group
+	and ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г‘Г·ГҐГІ]=#occ.occ_id	and cast(ps.[ГђГ Г±Г·ГҐГІГ­Г»Г© Г¬ГҐГ±ГїГ¶] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=4 and Г„Г ГІГ  = MaxDate),null) as SCH_4,
+isnull ((select sc.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ from 
+	(SELECT ps.ГЏГ®ГЄГ Г§Г Г­ГЁГҐ, ROW_NUMBER() over(order by so.[N ГЇ/ГЇ]) as sch_num, cast (Г„Г ГІГ  as date) as Г„Г ГІГ , cast(Max(Г„Г ГІГ ) OVER() as date)  as MaxDate 
+	from stack.[ГЏГ®ГЄГ Г§Г Г­ГЁГї Г±Г·ГҐГІГ·ГЁГЄГ®Гў] ps inner join stack.[Г‘ГЇГЁГ±Г®ГЄ Г®ГЎГєГҐГЄГІГ®Гў] so on so.ROW_ID = ps.[ГЋГЎГєГҐГЄГІ-ГЏГ®ГЄГ Г§Г Г­ГЁГї]
+	inner join stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu on tu.ROW_ID =ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г“Г±Г«ГіГЈГ ]
+	where tu.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service_group
+	and ps.[ГЏГ®ГЄГ Г§Г Г­ГЁГї-Г‘Г·ГҐГІ]=#occ.occ_id	and cast(ps.[ГђГ Г±Г·ГҐГІГ­Г»Г© Г¬ГҐГ±ГїГ¶] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=5 and Г„Г ГІГ  = MaxDate),null) as SCH_5
 from #occ 
--- входящее сальдо
-left join (select sum(Сумма) as сумма, [Номер услуги], ДоговорУК, Счет from stack.НСальдо where cast([Месяц расчета] as date)=@rasch_date   group by [Номер услуги], ДоговорУК, Счет)
-as ns on ns.ДоговорУК=#occ.uk_dog and ns.[Номер услуги] = #occ.service and #occ.occ_id = ns.Счет 
--- начисления
-left join (select sum(Сумма) as Начисл_сумма, sum(Объем) as Начисл_объем, [Номер услуги], ДоговорУК, Счет, ИспользованТариф, (select top 1 [Единица измерения] from stack.[Типы услуг] tu where tu.[Номер услуги] = nl.[Номер услуги]) as Ед_изм 
-from stack.[Начисления лицевых] nl where cast([Месяц расчета] as date)=@rasch_date   group by [Номер услуги], ДоговорУК, Счет, ИспользованТариф)
-as nt on nt.ДоговорУК=#occ.uk_dog and nt.[Номер услуги] = #occ.service and #occ.occ_id = nt.Счет
--- разовые
-left join (select sum(rns.Сумма) as Сумма_разовых, rns.[Номер услуги], rns.ДоговорУК, rns.Счет, rnd.Примечание 
-from stack.[РН список] rns inner join stack.[РН документ] rnd on rns.[РН-Список] = rnd.ROW_ID where cast(rns.[Месяц расчета] as date)=@rasch_date
-group by  rns.[Номер услуги], rns.ДоговорУК, rns.Счет, rnd.Примечание) as rn
-on rn.[Номер услуги]=#occ.service and rn.Счет = #occ.occ_id and rn.ДоговорУК=#occ.uk_dog 
--- платежи
-left join (select sum(Сумма) as Сумма, НомерУслуги, УКДоговор, Счет from stack.[Расчеты с поставщиками (детально)]
-where CAST(ДатаОплаты as date) BETWEEN @rasch_date and cast(EOMONTH(@rasch_date) as date) group by НомерУслуги, УКДоговор, Счет) as opl on
-opl.НомерУслуги = #occ.service and opl.Счет = #occ.occ_id and opl.УКДоговор=#occ.uk_dog
-left join (select distinct УКДоговор, Счет, НомерУслуги, MAX(ДатаОплаты) OVER(partition by Счет, УКДоговор, НомерУслуги) as lp_date  from stack.[Расчеты с поставщиками (детально)]) lp
-on lp.НомерУслуги=#occ.service and lp.Счет=#occ.occ_id and lp.УКДоговор=#occ.uk_dog
--- площадь лицевых
+-- ГўГµГ®Г¤ГїГ№ГҐГҐ Г±Г Г«ГјГ¤Г®
+left join (select sum(Г‘ГіГ¬Г¬Г ) as Г±ГіГ¬Г¬Г , [ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, Г‘Г·ГҐГІ from stack.ГЌГ‘Г Г«ГјГ¤Г® where cast([ГЊГҐГ±ГїГ¶ Г°Г Г±Г·ГҐГІГ ] as date)=@rasch_date   group by [ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, Г‘Г·ГҐГІ)
+as ns on ns.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ=#occ.uk_dog and ns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service and #occ.occ_id = ns.Г‘Г·ГҐГІ 
+-- Г­Г Г·ГЁГ±Г«ГҐГ­ГЁГї
+left join (select sum(Г‘ГіГ¬Г¬Г ) as ГЌГ Г·ГЁГ±Г«_Г±ГіГ¬Г¬Г , sum(ГЋГЎГєГҐГ¬) as ГЌГ Г·ГЁГ±Г«_Г®ГЎГєГҐГ¬, [ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, Г‘Г·ГҐГІ, Г€Г±ГЇГ®Г«ГјГ§Г®ГўГ Г­Г’Г Г°ГЁГґ, (select top 1 [Г…Г¤ГЁГ­ГЁГ¶Г  ГЁГ§Г¬ГҐГ°ГҐГ­ГЁГї] from stack.[Г’ГЁГЇГ» ГіГ±Г«ГіГЈ] tu where tu.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = nl.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ]) as Г…Г¤_ГЁГ§Г¬ 
+from stack.[ГЌГ Г·ГЁГ±Г«ГҐГ­ГЁГї Г«ГЁГ¶ГҐГўГ»Гµ] nl where cast([ГЊГҐГ±ГїГ¶ Г°Г Г±Г·ГҐГІГ ] as date)=@rasch_date   group by [ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, Г‘Г·ГҐГІ, Г€Г±ГЇГ®Г«ГјГ§Г®ГўГ Г­Г’Г Г°ГЁГґ)
+as nt on nt.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ=#occ.uk_dog and nt.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ] = #occ.service and #occ.occ_id = nt.Г‘Г·ГҐГІ
+-- Г°Г Г§Г®ГўГ»ГҐ
+left join (select sum(rns.Г‘ГіГ¬Г¬Г ) as Г‘ГіГ¬Г¬Г _Г°Г Г§Г®ГўГ»Гµ, rns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], rns.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, rns.Г‘Г·ГҐГІ, rnd.ГЏГ°ГЁГ¬ГҐГ·Г Г­ГЁГҐ 
+from stack.[ГђГЌ Г±ГЇГЁГ±Г®ГЄ] rns inner join stack.[ГђГЌ Г¤Г®ГЄГіГ¬ГҐГ­ГІ] rnd on rns.[ГђГЌ-Г‘ГЇГЁГ±Г®ГЄ] = rnd.ROW_ID where cast(rns.[ГЊГҐГ±ГїГ¶ Г°Г Г±Г·ГҐГІГ ] as date)=@rasch_date
+group by  rns.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ], rns.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ, rns.Г‘Г·ГҐГІ, rnd.ГЏГ°ГЁГ¬ГҐГ·Г Г­ГЁГҐ) as rn
+on rn.[ГЌГ®Г¬ГҐГ° ГіГ±Г«ГіГЈГЁ]=#occ.service and rn.Г‘Г·ГҐГІ = #occ.occ_id and rn.Г„Г®ГЈГ®ГўГ®Г°Г“ГЉ=#occ.uk_dog 
+-- ГЇГ«Г ГІГҐГ¦ГЁ
+left join (select sum(Г‘ГіГ¬Г¬Г ) as Г‘ГіГ¬Г¬Г , ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ, Г“ГЉГ„Г®ГЈГ®ГўГ®Г°, Г‘Г·ГҐГІ from stack.[ГђГ Г±Г·ГҐГІГ» Г± ГЇГ®Г±ГІГ ГўГ№ГЁГЄГ Г¬ГЁ (Г¤ГҐГІГ Г«ГјГ­Г®)]
+where CAST(Г„Г ГІГ ГЋГЇГ«Г ГІГ» as date) BETWEEN @rasch_date and cast(EOMONTH(@rasch_date) as date) group by ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ, Г“ГЉГ„Г®ГЈГ®ГўГ®Г°, Г‘Г·ГҐГІ) as opl on
+opl.ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ = #occ.service and opl.Г‘Г·ГҐГІ = #occ.occ_id and opl.Г“ГЉГ„Г®ГЈГ®ГўГ®Г°=#occ.uk_dog
+left join (select distinct Г“ГЉГ„Г®ГЈГ®ГўГ®Г°, Г‘Г·ГҐГІ, ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ, MAX(Г„Г ГІГ ГЋГЇГ«Г ГІГ») OVER(partition by Г‘Г·ГҐГІ, Г“ГЉГ„Г®ГЈГ®ГўГ®Г°, ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ) as lp_date  from stack.[ГђГ Г±Г·ГҐГІГ» Г± ГЇГ®Г±ГІГ ГўГ№ГЁГЄГ Г¬ГЁ (Г¤ГҐГІГ Г«ГјГ­Г®)]) lp
+on lp.ГЌГ®Г¬ГҐГ°Г“Г±Г«ГіГЈГЁ=#occ.service and lp.Г‘Г·ГҐГІ=#occ.occ_id and lp.Г“ГЉГ„Г®ГЈГ®ГўГ®Г°=#occ.uk_dog
+-- ГЇГ«Г®Г№Г Г¤Гј Г«ГЁГ¶ГҐГўГ»Гµ
 
 
 
