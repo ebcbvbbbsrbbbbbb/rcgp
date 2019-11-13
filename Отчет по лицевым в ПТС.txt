@@ -1,0 +1,126 @@
+ declare @rasch_date date
+ set @rasch_date = '2019-10-01'
+create table #occ (
+ occ_id int,
+ service int,
+ service_group int,
+ service_name varchar(255),
+ service_group_name varchar(255),
+ uk_dog int,
+ rasch_date date
+)
+insert into #occ  -- входящее сальдо
+select distinct ns.Счет, ns.[Номер услуги], tui.РодительНомер, tu1.Наименование, tu2.Наименование, ns.ДоговорУК, @rasch_date  
+from stack.НСальдо ns inner join stack.[Типы услуг иерархия] tui on tui.ПотомокНомер = ns.[Номер услуги] 
+inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = ns.[Номер услуги]
+inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = tui.РодительНомер
+where CAST([Месяц расчета]	as date) = @rasch_date and Поставщик = 1305 and tui.РодительТип=2 and ns.Сумма <> 0
+ --drop table #occ
+union	-- начисления
+select distinct ns.Счет, ns.[Номер услуги], tui.РодительНомер, tu1.Наименование, tu2.Наименование, ns.ДоговорУК, @rasch_date  
+from stack.НТариф ns inner join stack.[Типы услуг иерархия] tui on tui.ПотомокНомер = ns.[Номер услуги] 
+inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = ns.[Номер услуги]
+inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = tui.РодительНомер
+where CAST([Месяц расчета]	as date) = @rasch_date and Поставщик = 1305 and tui.РодительТип=2 and ns.Сумма <> 0
+
+union 		 -- разовые
+select distinct ns.Счет, ns.[Номер услуги], tui.РодительНомер, tu1.Наименование, tu2.Наименование, ns.ДоговорУК,  @rasch_date  
+from stack.[РН список] ns inner join stack.[Типы услуг иерархия] tui on tui.ПотомокНомер = ns.[Номер услуги] 
+inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = ns.[Номер услуги]
+inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = tui.РодительНомер
+where CAST([Месяц расчета]	as date) = @rasch_date and Поставщик = 1305 and tui.РодительТип=2 and ns.Сумма <> 0
+ -- select distinct  * from #occ
+ -- select * from #occ where occ_id=37368
+union 	-- платежи
+select distinct rsp.Счет, rsp.НомерУслуги, rsp.Услуга, tu1.Наименование, tu2.Наименование, rsp.УКДоговор, @rasch_date  
+from stack.[Расчеты с поставщиками (детально)] rsp inner join stack.[Типы услуг] tu1 on tu1.[Номер услуги] = rsp.НомерУслуги
+inner join stack.[Типы услуг] tu2 on tu2.[Номер услуги] = rsp.Услуга
+where CAST(rsp.ДатаОплаты as date) BETWEEN @rasch_date and cast(EOMONTH(@rasch_date) as date) and Поставщик = 1305 
+and rsp.Сумма <> 0 and rsp.ПризнакКоррекции <> 1
+
+--occ_id, ls, rasch_date, serv_id, serv_name, ed, vh_saldo, nach_ob, nach_summ, uk_id
+
+select #occ.occ_id as ЛС, (select Номер from stack.[Лицевые счета] where row_id = #occ.occ_id) as Номер_ЛС, #occ.rasch_date as Месяц, 
+#occ.service as Услуга, #occ.uk_dog, Ед_изм, ИспользованТариф as Тариф, isnull(case when nt.Начисл_сумма <> 0 then nt.Начисл_объем else 0 end,0) as Начисл_объем,
+isnull(nt.Начисл_сумма,0) as Начисл_сумма, isnull(rn.Сумма_разовых,0) as Разовые, isnull(rn.Примечание,'') as Разовые_прим, isnull(opl.Сумма,0) as Сумма_платежей,
+isnull(ns.Сумма,0) as ВХ_Сальдо, (isnull(ns.Сумма,0) + isnull(nt.Начисл_сумма,0) + isnull(rn.Сумма_разовых,0)) as ИСХ_Сальдо, 
+-- последняя оплата
+(select MAX(lopl.Дата) from (
+  select MAX(so.Дата) as Дата 
+  from stack.[Список оплаты] so inner join stack.[Оплата по видам] opv on so.ROW_ID = opv.[Распределение-Платеж]
+  inner join stack.[Типы услуг] tu on tu.ROW_ID = opv.[Распределение-Услуга] 
+  inner join stack.Организации org on opv.[Распределение-УК] = org.ROW_ID
+  inner join stack.[УК договоры] ukd on ukd.[Организация-УКДоговор] = org.ROW_ID
+  where ukd.ROW_ID = #occ.uk_dog and so.[Счет-Оплата] = #occ.occ_id and tu.[Номер услуги] = #occ.service
+  union
+  select MAX(ДатаОплаты) as Дата from stack.[Расчеты с поставщиками (детально)]
+  where УКДоговор= #occ.uk_dog and Счет= #occ.occ_id and НомерУслуги= #occ.service) as lopl
+  ) as Посл_опл, 
+-- счетчики
+isnull ((select sc.Показание from 
+	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
+	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
+	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
+	where tu.[Номер услуги] = #occ.service_group
+	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=1 and Дата = MaxDate),null) as SCH_1,
+isnull ((select sc.Показание from 
+	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
+	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
+	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
+	where tu.[Номер услуги] = #occ.service_group
+	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=2 and Дата = MaxDate),null) as SCH_2,
+isnull ((select sc.Показание from 
+	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
+	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
+	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
+	where tu.[Номер услуги] = #occ.service_group
+	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=3 and Дата = MaxDate),null) as SCH_3,
+isnull ((select sc.Показание from 
+	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
+	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
+	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
+	where tu.[Номер услуги] = #occ.service_group
+	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=4 and Дата = MaxDate),null) as SCH_4,
+isnull ((select sc.Показание from 
+	(SELECT ps.Показание, ROW_NUMBER() over(order by so.[N п/п]) as sch_num, cast (Дата as date) as Дата, cast(Max(Дата) OVER() as date)  as MaxDate 
+	from stack.[Показания счетчиков] ps inner join stack.[Список объектов] so on so.ROW_ID = ps.[Объект-Показания]
+	inner join stack.[Типы услуг] tu on tu.ROW_ID =ps.[Показания-Услуга]
+	where tu.[Номер услуги] = #occ.service_group
+	and ps.[Показания-Счет]=#occ.occ_id	and cast(ps.[Расчетный месяц] as date) = #occ.rasch_date)
+	as sc where sc.sch_num=5 and Дата = MaxDate),null) as SCH_5
+from #occ 
+-- входящее сальдо
+left join (select sum(Сумма) as сумма, [Номер услуги], ДоговорУК, Счет from stack.НСальдо where cast([Месяц расчета] as date)=@rasch_date   group by [Номер услуги], ДоговорУК, Счет)
+as ns on ns.ДоговорУК=#occ.uk_dog and ns.[Номер услуги] = #occ.service and #occ.occ_id = ns.Счет 
+-- начисления
+left join (select sum(Сумма) as Начисл_сумма, sum(Объем) as Начисл_объем, [Номер услуги], ДоговорУК, Счет, ИспользованТариф, (select top 1 [Единица измерения] from stack.[Типы услуг] tu where tu.[Номер услуги] = nl.[Номер услуги]) as Ед_изм 
+from stack.[Начисления лицевых] nl where cast([Месяц расчета] as date)=@rasch_date   group by [Номер услуги], ДоговорУК, Счет, ИспользованТариф)
+as nt on nt.ДоговорУК=#occ.uk_dog and nt.[Номер услуги] = #occ.service and #occ.occ_id = nt.Счет
+-- разовые
+left join (select sum(rns.Сумма) as Сумма_разовых, rns.[Номер услуги], rns.ДоговорУК, rns.Счет, rnd.Примечание 
+from stack.[РН список] rns inner join stack.[РН документ] rnd on rns.[РН-Список] = rnd.ROW_ID where cast(rns.[Месяц расчета] as date)=@rasch_date
+group by  rns.[Номер услуги], rns.ДоговорУК, rns.Счет, rnd.Примечание) as rn
+on rn.[Номер услуги]=#occ.service and rn.Счет = #occ.occ_id and rn.ДоговорУК=#occ.uk_dog 
+-- платежи
+left join (select sum(Сумма) as Сумма, НомерУслуги, УКДоговор, Счет from stack.[Расчеты с поставщиками (детально)]
+where CAST(ДатаОплаты as date) BETWEEN @rasch_date and cast(EOMONTH(@rasch_date) as date) group by НомерУслуги, УКДоговор, Счет) as opl on
+opl.НомерУслуги = #occ.service and opl.Счет = #occ.occ_id and opl.УКДоговор=#occ.uk_dog
+left join (select distinct УКДоговор, Счет, НомерУслуги, MAX(ДатаОплаты) OVER(partition by Счет, УКДоговор, НомерУслуги) as lp_date  from stack.[Расчеты с поставщиками (детально)]) lp
+on lp.НомерУслуги=#occ.service and lp.Счет=#occ.occ_id and lp.УКДоговор=#occ.uk_dog
+-- площадь лицевых
+
+
+
+
+
+
+ 
+where #occ.occ_id=62368
+
+ 
+
+drop table #occ
