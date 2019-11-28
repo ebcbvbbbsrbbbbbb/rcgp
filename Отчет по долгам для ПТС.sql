@@ -97,7 +97,6 @@ end  as itp
  and exists(select 1 from stack.[Лицевые иерархия] where Потомок=so.[Счет-Оплата] and Родитель=943) and ukd.Номер<>0) 
  ;
 
-
  with temp as (																  
 select #occ.occ_id as ЛС, ls as Номер_ЛС,
 cast ((select ФИО  from stack.[Карточки регистрации] where [Счет-Наниматель] = #occ.occ_id) as char(33)) as ФИО, 
