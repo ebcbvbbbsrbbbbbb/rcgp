@@ -1,20 +1,20 @@
 use Stack
-----  АВИЗО ПТС
-SELECT doc.дата as [Дата], ist.Наименование as Источник, isp.Наименование as Исполнитель, sum(opv.Сумма) as Сумма 
- from Stack.Документ doc  inner join stack.Организации ist on ist.ROW_ID = doc.[Источник-Платежи]		-- источник платежей
-inner join stack.[Список оплаты] so on so.[Платеж-Список] = doc.ROW_ID	                                 -- платеж
-inner join stack.[Оплата по видам] opv on opv.[Распределение-Платеж]=so.ROW_ID
-left join stack.[Типы услуг] tu on tu.ROW_ID = opv.[Распределение-Услуга]
-left join stack.Организации isp on isp.ROW_ID = opv.[Распределение-УК]	   
-where doc.[Тип документа]=67 and cast(doc.Дата	as date) = '2019-11-05' and doc.[Наш р/с-Платежи] = -1	and ist.ROW_ID=500
-group by  doc.дата, ist.Наименование, isp.Наименование
+----  РђР’РР—Рћ РџРўРЎ
+SELECT doc.РґР°С‚Р° as [Р”Р°С‚Р°], ist.РќР°РёРјРµРЅРѕРІР°РЅРёРµ as РСЃС‚РѕС‡РЅРёРє, isp.РќР°РёРјРµРЅРѕРІР°РЅРёРµ as РСЃРїРѕР»РЅРёС‚РµР»СЊ, sum(opv.РЎСѓРјРјР°) as РЎСѓРјРјР° 
+ from Stack.Р”РѕРєСѓРјРµРЅС‚ doc  inner join stack.РћСЂРіР°РЅРёР·Р°С†РёРё ist on ist.ROW_ID = doc.[РСЃС‚РѕС‡РЅРёРє-РџР»Р°С‚РµР¶Рё]		
+inner join stack.[РЎРїРёСЃРѕРє РѕРїР»Р°С‚С‹] so on so.[РџР»Р°С‚РµР¶-РЎРїРёСЃРѕРє] = doc.ROW_ID	                                
+inner join stack.[РћРїР»Р°С‚Р° РїРѕ РІРёРґР°Рј] opv on opv.[Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ-РџР»Р°С‚РµР¶]=so.ROW_ID
+left join stack.[РўРёРїС‹ СѓСЃР»СѓРі] tu on tu.ROW_ID = opv.[Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ-РЈСЃР»СѓРіР°]
+left join stack.РћСЂРіР°РЅРёР·Р°С†РёРё isp on isp.ROW_ID = opv.[Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ-РЈРљ]	   
+where doc.[РўРёРї РґРѕРєСѓРјРµРЅС‚Р°]=67 and cast(doc.Р”Р°С‚Р°	as date) = '2019-11-05' and doc.[РќР°С€ СЂ/СЃ-РџР»Р°С‚РµР¶Рё] = -1	and ist.ROW_ID=500
+group by  doc.РґР°С‚Р°, ist.РќР°РёРјРµРЅРѕРІР°РЅРёРµ, isp.РќР°РёРјРµРЅРѕРІР°РЅРёРµ
 
-----  АВИЗО УК
-SELECT doc.дата as [Дата], ist.Наименование as Источник, isp.Наименование as Исполнитель, sum(opv.Сумма) as Сумма 
- from Stack.Документ doc  inner join stack.Организации ist on ist.ROW_ID = doc.[Источник-Платежи]		-- источник платежей
-inner join stack.[Список оплаты] so on so.[Платеж-Список] = doc.ROW_ID	                                 -- платеж
-inner join stack.[Оплата по видам] opv on opv.[Распределение-Платеж]=so.ROW_ID
-left join stack.[Типы услуг] tu on tu.ROW_ID = opv.[Распределение-Услуга]
-left join stack.Организации isp on isp.ROW_ID = opv.[Распределение-УК]	   
-where doc.[Тип документа]=67 and cast(doc.Дата	as date) = '2019-11-06' and doc.[Наш р/с-Платежи] = -1	and ist.ROW_ID=451
-group by  doc.дата, ist.Наименование, isp.Наименование
+----  РђР’РР—Рћ РЈРљ
+SELECT doc.РґР°С‚Р° as [Р”Р°С‚Р°], ist.РќР°РёРјРµРЅРѕРІР°РЅРёРµ as РСЃС‚РѕС‡РЅРёРє, isp.РќР°РёРјРµРЅРѕРІР°РЅРёРµ as РСЃРїРѕР»РЅРёС‚РµР»СЊ, sum(opv.РЎСѓРјРјР°) as РЎСѓРјРјР° 
+ from Stack.Р”РѕРєСѓРјРµРЅС‚ doc  inner join stack.РћСЂРіР°РЅРёР·Р°С†РёРё ist on ist.ROW_ID = doc.[РСЃС‚РѕС‡РЅРёРє-РџР»Р°С‚РµР¶Рё]		
+inner join stack.[РЎРїРёСЃРѕРє РѕРїР»Р°С‚С‹] so on so.[РџР»Р°С‚РµР¶-РЎРїРёСЃРѕРє] = doc.ROW_ID	                              
+inner join stack.[РћРїР»Р°С‚Р° РїРѕ РІРёРґР°Рј] opv on opv.[Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ-РџР»Р°С‚РµР¶]=so.ROW_ID
+left join stack.[РўРёРїС‹ СѓСЃР»СѓРі] tu on tu.ROW_ID = opv.[Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ-РЈСЃР»СѓРіР°]
+left join stack.РћСЂРіР°РЅРёР·Р°С†РёРё isp on isp.ROW_ID = opv.[Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ-РЈРљ]	   
+where doc.[РўРёРї РґРѕРєСѓРјРµРЅС‚Р°]=67 and cast(doc.Р”Р°С‚Р°	as date) = '2019-11-06' and doc.[РќР°С€ СЂ/СЃ-РџР»Р°С‚РµР¶Рё] = -1	and ist.ROW_ID=451
+group by  doc.РґР°С‚Р°, ist.РќР°РёРјРµРЅРѕРІР°РЅРёРµ, isp.РќР°РёРјРµРЅРѕРІР°РЅРёРµ
