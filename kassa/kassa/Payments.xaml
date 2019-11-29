@@ -14,7 +14,7 @@
         <local:OutterCellColorConverter x:Key="OutterCellColorConverter"/>
         <local:InnerCellColorConverter x:Key="InnerCellColorConverter"/>
         <local:SummaryCellColorConverter x:Key="SummaryCellColorConverter"/>
-        <!--<local:isCheckedToReadonlyConverter x:Key="isCheckedToReadonlyConverter"/>-->
+     
         <!-- Заголовок столбца платежей -->
         <ControlTemplate TargetType="DataGridColumnHeader" x:Key="PaymentColumnHeader">
         </ControlTemplate>
@@ -32,8 +32,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-
 
         <!-- Стиль заголовка таблицы-->
         <Style x:Key="NamedStyle" TargetType="DataGridColumnHeader">
@@ -128,7 +126,6 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </Window.Resources>
-    <!-- /////////////////////////////////////////// -->
 
 
     <Grid Margin="0,0,12,0">
@@ -237,7 +234,7 @@
                                     <Style TargetType="DataGridCell">
                                         <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
                                         <Setter Property="Background" Value="#FF95F3EB"/>
-                                        <!--<Setter Property="IsEnabled" Value="{Binding Converter={StaticResource isCheckedToReadonlyConverter}, Path=IsCorrect, RelativeSource={RelativeSource AncestorType=DataGridRow}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                                       
                                     </Style>
                                 </DataGridTextColumn.CellStyle>
                             </DataGridTextColumn>
@@ -296,208 +293,7 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-
-
-
-        <!--<DataGrid  Unloaded="PaymentsGrid_Unloaded" Loaded="PaymentsGrid_Loaded"                      
-             EnableRowVirtualization="True" 
-             EnableColumnVirtualization="True"
-             VirtualizingStackPanel.VirtualizationMode="Standard"
-             VirtualizingStackPanel.IsVirtualizing="True"
-                  CanUserAddRows="False" 
-                  x:Name="PaymentsGrid" IsReadOnly="False"   AutoGenerateColumns="False"  
-                  Grid.Column="1" Grid.Row="1" CanUserReorderColumns="False"
-                  HorizontalGridLinesBrush="White" VerticalGridLinesBrush="White" CanUserSortColumns="True" 
-                  AreRowDetailsFrozen="True" SelectionMode="Single" CanUserDeleteRows="False" RowDetailsVisibilityMode="Visible"          
-                  HeadersVisibility="Column" SelectionChanged="PaymentsGrid_SelectionChanged" GridLinesVisibility="Vertical"    
-                  ScrollViewer.ScrollChanged="PaymentsGrid_ScrollChanged"  
-                  >
-            -->
-        <!-- Отключаем рамку ячейки, в которой лежит таблица -->
-        <!--
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.Columns>
-                <DataGridTextColumn   HeaderStyle="{StaticResource NamedStyle}"  Width="1*" IsReadOnly="True" Header="Лицевой счет"  Binding="{Binding Path=Occ}">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Template" Value="{StaticResource OccCellStyle}"/>
-                            <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
-                            <Setter Property="Background" Value="#FF55D3EA"/>
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn  HeaderStyle="{StaticResource NamedStyle}"  Width="1*" IsReadOnly="True" Header="Номер платежа"  Binding="{Binding Path=PaymentId}">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Template" Value="{StaticResource OccCellStyle}"/>
-                            <Setter Property="Background" Value="#FFA4EAF7"/>
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn  HeaderStyle="{StaticResource NamedStyle}"  Width="1*" IsReadOnly="True" Header="E-mail"  Binding="{Binding Path=Email}">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Template" Value="{StaticResource OccCellStyle}"/>
-                            <Setter Property="Background" Value="#FFA4EAF7"/>
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                -->
-        <!--  Внутренняя таблица с инфой по платежам  -->
-        <!--
-                <DataGridTemplateColumn  Width="4*" HeaderStyle="{StaticResource InnerHeaderStyle}">
-                    <DataGridTemplateColumn.Header>
-                        <DataGrid Style="{StaticResource HeaderGrid}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Width="1*"  HeaderStyle="{StaticResource NamedStyle}" x:Name="PayingDateColumn">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock Text="Дата" ></TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="3*" HeaderStyle="{StaticResource NamedStyle}" x:Name="ServiceNameColumn">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock Text="Услуга"></TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="1*" HeaderStyle="{StaticResource NamedStyle}" x:Name="PayingSumColumn" IsReadOnly="True">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock Text="Сумма"></TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="1*" HeaderStyle="{StaticResource NamedStyle}" x:Name="IspColumn">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock Text="Исполнитель"></TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="1*" HeaderStyle="{StaticResource NamedStyle}" x:Name="IspInnColumn">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock Text="Исполнитель"></TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="1*" HeaderStyle="{StaticResource NamedStyle}" x:Name="CorrectionColumn">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock Text="Коррекция"></TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="30" HeaderStyle="{StaticResource NamedStyle}" x:Name="ExcludeColumn">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock Text="Искл."></TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <DataGrid                                                                
-                                EnableRowVirtualization="True" 
-                                EnableColumnVirtualization="True"
-                                VirtualizingStackPanel.VirtualizationMode="Standard"
-                                VirtualizingStackPanel.IsVirtualizing="True"
-                                 VirtualizingStackPanel.CacheLength="10" 
-                                 VirtualizingStackPanel.CacheLengthUnit="Page"
-                                CanUserAddRows="False" CanUserReorderColumns="False" 
-                                AutoGenerateColumns="False" ItemsSource="{Binding Path=PaymentsCollection}" 
-                                HeadersVisibility="None"  
-                                SelectionMode="Single" GridLinesVisibility="Vertical" HorizontalScrollBarVisibility="Disabled"  
-                                IsReadOnly="False"
-                                CanUserResizeColumns="True"
-                                Style="{StaticResource innerGridStyle}" CanUserDeleteRows="False"
-                                x:Name="InnerGrid" CanUserSortColumns="True"
-                               >
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Width="{Binding Source={x:Reference PayingDateColumn}, Path=Width, Mode=TwoWay}" IsReadOnly="True" Binding="{Binding Path=Date}">
-                                        <DataGridTextColumn.CellStyle >
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
-                                                <Setter Property="Background" Value="#FF95F3EB"/>
-                                                -->
-        <!--<Setter Property="IsEnabled" Value="{Binding Converter={StaticResource isCheckedToReadonlyConverter}, Path=IsCorrect, RelativeSource={RelativeSource AncestorType=DataGridRow}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
-        <!--
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Width="{Binding Source={x:Reference ServiceNameColumn}, Path=Width, Mode=TwoWay}"  IsReadOnly="True" Binding="{Binding Path=Service}">
-                                        <DataGridTextColumn.CellStyle >
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
-                                                <Setter Property="Background" Value="#FF95F3EB"/>
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Width="{Binding Source={x:Reference PayingSumColumn}, Path=Width, Mode=TwoWay}" Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                                        <DataGridTextColumn.CellStyle >
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
-                                                <Setter Property="Background" Value="#FF95F3EB"/>
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Width="{Binding Source={x:Reference IspColumn}, Path=Width, Mode=TwoWay}"  IsReadOnly="True" Binding="{Binding Path=Isp_name}">
-                                        <DataGridTextColumn.CellStyle >
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
-                                                <Setter Property="Background" Value="#FF95F3EB"/>
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Width="{Binding Source={x:Reference IspInnColumn}, Path=Width, Mode=TwoWay}"  IsReadOnly="True" Binding="{Binding Path=Isp_inn}">
-                                        <DataGridTextColumn.CellStyle >
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
-                                                <Setter Property="Background" Value="#FF95F3EB"/>
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn  Width="{Binding Source={x:Reference CorrectionColumn}, Path=Width, Mode=TwoWay}" Binding="{Binding Path=Correction, UpdateSourceTrigger=LostFocus, Mode=TwoWay, StringFormat={}{0:n2}}" CanUserReorder="False">
-                                        <DataGridTextColumn.CellStyle >
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
-                                                <Setter Property="Background" Value="#FF95F3EB"/>
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTemplateColumn Width="{Binding Source={x:Reference ExcludeColumn}, Path=Width, Mode=TwoWay}">
-                                        -->
-        <!--<DataGridTemplateColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
-                                                <Setter Property="Background" Value="#FF95F3EB"/>
-                                            </Style>                                            
-                                        </DataGridTemplateColumn.CellStyle>-->
-        <!--
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <CheckBox Unchecked="CheckBox_Unchecked" Checked="CheckBox_Checked_1" IsChecked="{Binding Path=IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                                </CheckBox>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn >
-                <DataGridTextColumn  HeaderStyle="{StaticResource NamedStyle}"  Width="*" IsReadOnly="True" Header="Всего"  Binding="{Binding Path=Total}">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Template" Value="{StaticResource OccCellStyle}"/>
-                            <Setter Property="Background" Value="#FF55D3EA"/>
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>-->
+       
         <StackPanel Grid.Row="1" Grid.Column="2" x:Name="saveBlock">
             <DockPanel Background="Transparent"  x:Name="BlockSent">
                 <StackPanel>
