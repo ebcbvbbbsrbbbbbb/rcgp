@@ -22,10 +22,6 @@ using System.Windows.Controls.Primitives;
 namespace kassa
 {
 
-    /// <summary>
-    /// Логика взаимодействия для Payments.xaml
-    /// </summary>
-    /// 
     public class OutterCellColorConverter : IMultiValueConverter //Конвертер цветов ячеек основного грида
     {
         object returnValue;
@@ -244,8 +240,8 @@ namespace kassa
         public static ObservableCollection<Model.NegativeSummary> negativeSummary;
         public static ObservableCollection<Model.PaymentsGroup> o;
         public static ObservableCollection<Model.PaymentsGroup> source;
-        public static Dictionary<int, ObservableCollection<Model.PaymentsGroup>> savedPacks; // Для сохраненных пачек (кнопка "Сохранить")
-        public static Dictionary<int, ObservableCollection<Model.PaymentsGroup>> sourcePacks; // Если пачку начали редактировать, то сюда будем класть ее первоначальный вид
+        public static Dictionary<int, ObservableCollection<Model.PaymentsGroup>> savedPacks;
+        public static Dictionary<int, ObservableCollection<Model.PaymentsGroup>> sourcePacks; 
         public int paymQuantity { get; set; } = 0;
 
 
@@ -268,9 +264,7 @@ namespace kassa
             negativePayments.Columns.Add("value", Type.GetType("System.Decimal"));
             grOccPayments.ItemsSource = occPayments.DefaultView;
             
-            autodeleteProperty = new Dictionary<string, int>(); //Элементы словаря - номер пачки и флаг, определяющий, нужно ли удалять сохраненную пачку после закрытия окна Payments
-            // Model.WindowElements.paymentListDataGrid = PaymentsGrid;
-            // Model.WindowElements.paymentListDataGrid.ItemsSource = Model.GlobalParameters.worklistDataset.Tables["PaymentsList"].DefaultView;
+            autodeleteProperty = new Dictionary<string, int>(); 
             Model.GlobalParameters.saldo = 0; // "Баланс" при редактировании платежей в пачке
             Model.WindowElements.saldoLabel = lblSaldo;
             Model.WindowElements.saldoLabel.Text = Model.GlobalParameters.saldo.ToString("N2");
@@ -289,41 +283,33 @@ namespace kassa
             grOccPayments.ItemsSource = occSummary;
             Model.WindowElements.PaymentsGrid.Items.Clear();
            
-            // Model.WindowElements.PaymentsGrid.ItemsSource = Payments.o;
+    
 
             //Создаем словарь для хранения исходного состояния пачек, чтобы в случае их редактирования
             //была возможность восстановить их начальное состояние по нажатию кнопки "Загрузить исходную",
-            //из локальной копии, не обращаясь заново к серверу.
+            //из локальной копии.
             if (sourcePacks == null)
             {        
                 sourcePacks = new Dictionary<int, ObservableCollection<Model.PaymentsGroup>>();
             }
 
-            //Cоздаем словарь savedPacks, в который в случае сохранения редактированной пачки
-            //будем складывать пары [номер пачки]-[коллекция групп платежей пачки], чтобы была возможность
-            //их подгрузить в том виде, в котором они были сохранены.
 
             if (savedPacks == null)
             { 
                savedPacks = new Dictionary<int, ObservableCollection<Model.PaymentsGroup>>();
             }
 
-            //Если пачки ранее сохранялись после редактирования и в словаре savedPacks 
-            //имеется пачка, с которой сейчас работаем, то подгружаем ее в качестве текущей
-            //и включаем кнопку, позволяющую загузить пачку в ее исходном виде.
 
             if (savedPacks.ContainsKey(currentPack))
             {
                 o = savedPacks[currentPack];
-                btnLoadSource.Visibility = Visibility.Visible; // Кнопка "Загрузить исходную"  
+                btnLoadSource.Visibility = Visibility.Visible;  
             }
 
 
             else
             {
-                // Возможно эта пачка уже подгружалась, значит она должна быть сохранена в 
-                // sourcePacks, куда складываем пачки в их исходном виде, в таком случае 
-                // забираем оттуда, чтобы лишний раз не забирать с сервера.
+               
                 if (sourcePacks.ContainsKey(currentPack))
                 {
                     o = new ObservableCollection<Model.PaymentsGroup>(sourcePacks[currentPack].Select(i => (Model.PaymentsGroup)i.Clone()).ToList());
@@ -337,7 +323,7 @@ namespace kassa
                 //и когда пачка еще не выгружалась, и тогда информацию по платежам берем из таблицы kassa_payments.
 
                 {
-                    //Пачка ранее выгружалась.
+                  
                     if (sp.Row["send_date"].ToString() != "")
                     {
                         cmd.CommandText = "SELECT (select case when value < 0 then 1 else 0 end ) as isCorrect,  vipiska_id, vipiska_date, pack_id, pack_date, pack_total, docsnum, source,  occ_id, email, paying_id, service_name, value,  paying_date, isp_id, isp_name, isp_inn, 1 as isSent from Stack.kassa_history where pack_id = @pack_id order by occ_id";
@@ -355,7 +341,7 @@ namespace kassa
                         Model.GlobalParameters.worklistDataset.Tables["PaymentsList"].Clear(); // Чистим список платежей 
                         da.Fill(Model.GlobalParameters.worklistDataset.Tables["PaymentsList"]);
                     }
-                    //Пачка ранее не выгружалась.
+                   
                     else
                     {
                         cmd.CommandText = "SELECT (select case when value < 0 then 1 else 0 end ) as isCorrect,  vipiska_id, vipiska_date, pack_id, pack_date, pack_total, docsnum, source,  occ_id, email, paying_id, service_name, value,  paying_date, isp_id, isp_name, isp_inn, 0 as isSent from Stack.kassa_payments where pack_id = @pack_id order by occ_id";
@@ -373,9 +359,6 @@ namespace kassa
 
 
                     }
-                    //Раскидываем информацию по платежам из таблицы worklistDataset.Tables["PaymentsList"],
-                    //куда она попадает изначально, по соответствующим объектам Payments и PaymentsGroup,
-                    //которые в совокупности являются источником элементов для PaymentsGrid  
                     o.Clear();
                     Model.Utility.DistributePaymentsTable(negativeSummary, occSummary, o);
                     
@@ -384,7 +367,6 @@ namespace kassa
 
             }
 
-            // Сохраняем копию исходника пачки, чтобы в дальнейшем лишний раз не обращаться к серверу
             PaymentsGrid.ItemsSource = o;
             if (!sourcePacks.ContainsKey(currentPack))
             {
@@ -398,77 +380,9 @@ namespace kassa
 
         private void OnChecked(object sender, RoutedEventArgs e)
         {
-          //  DataRowView currentRow = (DataRowView)Model.WindowElements.paymentListDataGrid.SelectedItem;
+         
             DataGrid inn =  this.FindName("InnerGrid") as DataGrid;
-          //  MessageBox.Show(currentRow.ToString());
-
-
-            //if (savedPacks.ContainsKey(currentPack)) { savedPacks.Remove(currentPack);}
-            //savedPacks.Add()
-
-
-
-
-
-            //if (!Model.GlobalParameters.packsDataset.Tables.Contains(currentPack.ToString()))
-            //{
-            //    DataTable packs = Model.GlobalParameters.worklistDataset.Tables["PaymentsList"].Copy();
-            //    packs.TableName = currentPack.ToString();
-            //    Model.GlobalParameters.packsDataset.Tables.Add(packs);
-            //    if (!autodeleteProperty.ContainsKey(currentPack.ToString()))
-            //    {
-            //        autodeleteProperty.Add(currentPack.ToString(), 1);
-            //    }
-            //    else
-            //        autodeleteProperty[currentPack.ToString()] = 1;
-
-            //}
-
-
-            //Decimal value = (Decimal)currentRow["value"];
-
-
-            //if (Model.GlobalParameters.saldo < 0)
-            //{
-            //    if (value < 0)
-            //    {
-            //        Model.GlobalParameters.saldo += value;
-            //        value = 0;
-            //        currentRow["value"] = value;
-            //        Model.WindowElements.saldoLabel.Text = Model.GlobalParameters.saldo.ToString("N2");
-            //    }
-            //    if (value >= 0)
-            //    {
-            //        if (Math.Abs(value) > Math.Abs(Model.GlobalParameters.saldo))
-            //        {
-            //            value += Model.GlobalParameters.saldo;
-            //            Model.GlobalParameters.saldo = 0;
-            //            currentRow["value"] = value;
-            //            Model.WindowElements.saldoLabel.Text = Model.GlobalParameters.saldo.ToString("N2");
-            //        }
-            //        else
-            //        {
-            //            Model.GlobalParameters.saldo += value;
-            //            value = 0;
-            //            currentRow["value"] = value;
-            //            Model.WindowElements.saldoLabel.Text = Model.GlobalParameters.saldo.ToString("N2");
-            //        }
-            //    }
-
-            //}
-            //else
-            //{
-              
-                
-            //        Model.GlobalParameters.saldo += value;
-            //        value = 0;
-            //    currentRow["value"] = value;
-            //    Model.WindowElements.saldoLabel.Text = Model.GlobalParameters.saldo.ToString("N2");
-
-
-            //}
-           // currentRow.EndEdit();
-
+        
         }
         private void OnUnchecked(object sender, RoutedEventArgs e)
         {
@@ -486,42 +400,7 @@ namespace kassa
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // Кнопка "Загрузить исходную"
-        {
-            //SqlCommand cmd = new SqlCommand();
-            //cmd.Connection = Model.GlobalParameters.sqlConn;
-            //cmd.CommandText = "SELECT (select case when value < 0 then 1 else 0 end ) as isCorrect,  pack_id, occ_id, email, paying_id, paying_date, source, service_name, isp_name, value, isp_inn from Stack.kassa_payments where pack_id = @pack_id order by occ_id";
-            //SqlParameter p = new SqlParameter("@pack_id", System.Data.SqlDbType.Int);
-            //var sp = Model.WindowElements.exportListDataGrid.SelectedItem as DataRowView;
-            //p.Value = sp.Row["pack_id"];
-            //cmd.Parameters.Add(p);
-            //SqlDataAdapter da = new SqlDataAdapter(cmd);
-            //Model.GlobalParameters.worklistDataset.Tables["PaymentsList"].Clear();
-            //da.Fill(Model.GlobalParameters.worklistDataset.Tables["PaymentsList"]);
-            //Model.Utility.DistributePaymentsTable(negativeSummary, occSummary, o);
-            //savedPacks.Remove(currentPack);
-            //((Button)sender).Visibility = Visibility.Collapsed;
-            // Model.WindowElements.paymentListDataGrid.Columns[5].Visibility = Visibility.Visible; // Checkbox column
-            //if (Model.GlobalParameters.worklistDataset.Tables["PaymentsList"].Select("value<0").Count()>0)
-            //{
-            //    foreach (DataRow dr in Model.GlobalParameters.worklistDataset.Tables["ExportList"].Rows)
-            //    {
-            //        if ((int)dr["pack_id"] == (int)sp.Row["pack_id"])
-            //        {
-            //            dr["isCorrect"] = 1;
-            //        }
-
-            //    }
-            //}
-            //PaymentsGrid.Items.Clear();
-
-            //if (PaymentsGrid.ItemsSource == savedPacks[currentPack])
-            //{
-            //    savedPacks.Add(currentPack, savedPacks[currentPack]);
-            //}
-            //else
-            //{
-            //    savedPacks.Add(currentPack, o);
-            //}
+        {            
 
             savedPacks.Remove(currentPack);
             Model.GlobalParameters.savedPackId.Remove(currentPack);
@@ -547,12 +426,6 @@ namespace kassa
             return;
             }
 
-            /*
-             Если в savedPacks уже есть пачка с данным номером, удаляем и добавляем текущую. В добавляемой пачке
-             во всех объектах PaymentsGroup проставляем у свойства IsCorrect значение 0, означающее, что в пачке
-             нет отрицательных платежей.
-            */
-
             if (savedPacks.ContainsKey(currentPack))
             {
                 savedPacks.Remove(currentPack);
@@ -569,31 +442,6 @@ namespace kassa
             x = (DataRow)(Model.GlobalParameters.worklistDataset.Tables["Worklist"].Select("pack_id=" + currentPack.ToString())).First();
             x["IsCorrect"] = 0;
             Payments.GetWindow(this).Close();
-            
-
-
-            //if (Model.GlobalParameters.packsDataset.Tables.Contains(currentPack.ToString()))
-            //{ Model.GlobalParameters.packsDataset.Tables.Remove(currentPack.ToString()); }
-
-            //DataTable dt = Model.GlobalParameters.worklistDataset.Tables["PaymentsList"].Select("value > 0").CopyToDataTable();
-            //dt.TableName = currentPack.ToString();
-            //Model.GlobalParameters.packsDataset.Tables.Add(dt);
-            //Payments.GetWindow(this).Close();
-            //PaymentsGrid.RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.Collapsed;
-
-            //if (!autodeleteProperty.ContainsKey(currentPack.ToString()))
-            //{
-            //    autodeleteProperty.Add(currentPack.ToString(), 0);
-            //}
-            //else
-            //    autodeleteProperty[currentPack.ToString()] = 0;
-            //foreach (DataRow dr in Model.GlobalParameters.worklistDataset.Tables["ExportList"].Rows)
-            //{
-            //    if ((int)dr["pack_id"] == currentPack)
-            //    {
-            //        dr["isCorrect"] = 0;
-            //    }
-            //}
         }
 
         private void PaymentsGrid_Unloaded(object sender, RoutedEventArgs e) //  DeferRefreshException при закрытии окна платежей
@@ -621,8 +469,6 @@ namespace kassa
 
         private void PaymentsGrid_Loaded(object sender, RoutedEventArgs e) // Вывод деталей пачки
         {
-            //----------------------- Выводим сводку по пачке (количество лицевых, платежей, отрицательных, разбивку по лицевым) --------------------------------------
-
             SqlParameter p = new SqlParameter("@pack_id", System.Data.SqlDbType.Int);
             p.Value = (int)currentPack;            
             SqlCommand cmd2 = new SqlCommand();
