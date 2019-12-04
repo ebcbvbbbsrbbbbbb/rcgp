@@ -1,28 +1,49 @@
-  use Stack
-declare @rasch_date date
-set @rasch_date = '20191101'
-;
-with temp as (
+USE [Stack]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE FUNCTION [dbo].[getKvitPrinted] (@rasch_date date)
+    RETURNS TABLE
+    AS RETURN (
+	with temp as (
 SELECT distinct 
-ki.[КвитИсполнители-Счет] as ls_id,
-(select Номер from stack.[Лицевые счета] where row_id = ki.[КвитИсполнители-Счет]) as ЛС,
-(select Улица from stack.[AddrLs_Table](ki.[КвитИсполнители-Счет],0)) as Улица,
-(select Дом from stack.[AddrLs_Table](ki.[КвитИсполнители-Счет],0)) as Дом,
-(select Квартира from stack.[AddrLs_Table](ki.[КвитИсполнители-Счет],0)) as Квартира,
-ki.[КвитИсполнители-Макет] as Макет,
-mk.Название as Назв_макета,
-org1.ДЕЗНаим as Исп,
-count(*) over(partition by ki.[КвитИсполнители-Счет], org1.ДЕЗНаим ) as [Кол-во квит.]
-  FROM stack.Квит_Исполнители ki 
-  left join stack.Квит_Организации org1 on ki.[КвитИсполнители-ОргИсп] = org1.ROW_ID
-  left join stack.Квит_Организации org2 on ki.[КвитИсполнители-ОргПолуч] = org2.ROW_ID
-  inner join stack.[Макеты квитанций] mk on mk.ROW_ID = ki.[КвитИсполнители-Макет]
-  where cast (ki.Месяц as date) = @rasch_date  and [КвитИсполнители-ОргИсп] <> 17
+ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚] as ls_id,
+(select РќРѕРјРµСЂ from stack.[Р›РёС†РµРІС‹Рµ СЃС‡РµС‚Р°] where row_id = ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚]) as Р›РЎ,
+(
+	case when (select РЈР»РёС†Р° from stack.[AddrLs_Table](ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚],0)) = ''
+	then (select РќРџ from stack.[AddrLs_Table](ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚],0))
+	else (select РЈР»РёС†Р° from stack.[AddrLs_Table](ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚],0))
+	end
+)	
+as РЈР»РёС†Р°,
+(select Р”РѕРј from stack.[AddrLs_Table](ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚],0)) as Р”РѕРј,
+(select РљРІР°СЂС‚РёСЂР° from stack.[AddrLs_Table](ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚],0)) as РљРІР°СЂС‚РёСЂР°,
+ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РњР°РєРµС‚] as РњР°РєРµС‚,
+mk.РќР°Р·РІР°РЅРёРµ as РќР°Р·РІ_РјР°РєРµС‚Р°,
+org1.Р”Р•Р—РќР°РёРј as РСЃРї, org2.РќР°РёРјРµРЅРѕРІР°РЅРёРµ as РўРµРє_РЈРљ,
+count(*) over(partition by ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚], org1.Р”Р•Р—РќР°РёРј ) as [РљРѕР»-РІРѕ РєРІРёС‚.]
+  FROM stack.РљРІРёС‚_РСЃРїРѕР»РЅРёС‚РµР»Рё ki 
+  left join stack.РљРІРёС‚_РћСЂРіР°РЅРёР·Р°С†РёРё org1 on ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РћСЂРіРСЃРї] = org1.ROW_ID
+  left join stack.[РњР°РєРµС‚С‹ РєРІРёС‚Р°РЅС†РёР№] mk on mk.ROW_ID = ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РњР°РєРµС‚]
+  left join stack.[РЈРљ Р»РёС†РµРІРѕРіРѕ] ukl on ukl.РЎС‡РµС‚ = ki.[РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РЎС‡РµС‚] and @rasch_date BETWEEN cast(ukl.Р”Р°С‚РќР°С‡ as date) and cast(ukl.Р”Р°С‚РљРЅС† as date)
+  left join stack.РћСЂРіР°РЅРёР·Р°С†РёРё org2 on ukl.РЈРљ = org2.ROW_ID
+  where cast (ki.РњРµСЃСЏС† as date) = @rasch_date  and [РљРІРёС‚РСЃРїРѕР»РЅРёС‚РµР»Рё-РћСЂРіРСЃРї] <> 17
     )
- select distinct лс, Улица,Дом,Квартира,/*Назв_макета,*/Исп, [Кол-во квит.],
-   case when [Кол-во квит.]%2>0
-	then FLOOR([Кол-во квит.]/2)+1
-	else [Кол-во квит.]/2
-  end as [Кол-во листов]  
+ select distinct TOP 9999999 Р»СЃ, РЈР»РёС†Р°, Р”РѕРј,РљРІР°СЂС‚РёСЂР°,/*РќР°Р·РІ_РјР°РєРµС‚Р°,*/РСЃРї, isnull(РўРµРє_РЈРљ,РСЃРї) РўРµРє_РЈРљ, [РљРѕР»-РІРѕ РєРІРёС‚.],
+   case when [РљРѕР»-РІРѕ РєРІРёС‚.]%2>0
+	then FLOOR([РљРѕР»-РІРѕ РєРІРёС‚.]/2)+1
+	else [РљРѕР»-РІРѕ РєРІРёС‚.]/2
+  end as [РљРѕР»-РІРѕ Р»РёСЃС‚РѕРІ]  
   from temp
-  order by Исп, Улица, Дом,Квартира
+  order by РСЃРї, РЈР»РёС†Р°, Р”РѕРј,РљРІР°СЂС‚РёСЂР°
+)
+
+
+GO
+
+
