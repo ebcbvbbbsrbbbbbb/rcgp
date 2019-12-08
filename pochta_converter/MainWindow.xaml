@@ -22,12 +22,10 @@
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="1">
             <StackPanel DockPanel.Dock="Left">
-
                 <Button Content="ОТКРЫТЬ" Name="btnOpen" VerticalAlignment="Top" Height="62"  Click="Button_Click" Grid.Row="1" Grid.Column="1" Margin="5,0,5,5"/>
                 <Button Content="СОХРАНИТЬ" IsEnabled="False" Name="btnSave"   Margin="5,0,5,5" VerticalAlignment="Top" Height="62"  Click="Button_Click_1" Grid.Row="1" Grid.Column="1"/>
                 <ProgressBar Name="prBar" Height="22"  Margin="5,0,5,5" VerticalAlignment="Top" Width="Auto" Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
             </StackPanel>
-
         </DockPanel>
     </Grid>
 </Window>
