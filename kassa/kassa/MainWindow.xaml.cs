@@ -24,19 +24,17 @@ namespace kassa
     public partial class MainWindow : Window
     {
         decimal Sum = 0;
-        Dictionary<string, string> uploadedPacks; // Пачки, которые уже были выгружены, для проверки на повторную выгрузку
+        Dictionary<string, string> uploadedPacks; 
         public MainWindow()
-        {
-            
+        {            
             InitializeComponent();
             DataContext = new ViewModel(MainGrid, ExportGrid, cmbInterval, calendPanel);
             cmbInterval.SelectionChanged += cmbOnselectionChanged;
             dpDateFrom.SelectedDate = DateTime.Now; 
             dpDateTo.SelectedDate = DateTime.Now;
-            uploadedPacks = new Dictionary<string, string>(); // Словарь для хранения идентификаторов пачек, которые уже выгружались ранее, с датой выгрузки
+            uploadedPacks = new Dictionary<string, string>(); 
             Model.WindowElements.progressBar = prBar;
             Model.WindowElements.btnExport = btnExport;
-
             Model.GlobalParameters.connectionString = Model.Utility.makeConnectionString(Model.GlobalParameters.Host, Model.GlobalParameters.DBname, Model.GlobalParameters.Username, Model.GlobalParameters.Password, 100);
             Model.Utility.connectToDatabase(Model.GlobalParameters.connectionString);
             if (Model.GlobalParameters.sqlConn == null || Model.GlobalParameters.sqlConn.State == ConnectionState.Closed)
@@ -69,18 +67,11 @@ namespace kassa
                 btnShowRecord.IsEnabled = true;
                 btnReconnect.Visibility = Visibility.Collapsed;
             }
-
-
-
         }
-
-
-
-        private void cmbOnselectionChanged(object sender, SelectionChangedEventArgs e) // Переключение комбобокса
+        private void cmbOnselectionChanged(object sender, SelectionChangedEventArgs e) 
         {
             if (((ComboBoxItem)(((ComboBox)sender).SelectedItem)).Tag.ToString() == "1") 
-            {
-                // Устанавливаем значение начала периода в DatePicker как первый день текущего месяца
+            {                
                 calendPanel.Visibility = System.Windows.Visibility.Visible;
                 ((DatePicker)((DockPanel)Model.WindowElements.calendPanel.Children[0]).Children[1]).Text =  (new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)).ToString(); 
             }
@@ -90,22 +81,21 @@ namespace kassa
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) // Кнопка "Добавить к выгрузке"
+        private void Button_Click(object sender, RoutedEventArgs e) 
         {
             Model.DataGridUtilities.FillExportList(Model.GlobalParameters.worklistDataset);
         }
 
-        private void Row_DoubleClick(object sender, RoutedEventArgs e) // Создание окна Payments
+        private void Row_DoubleClick(object sender, RoutedEventArgs e) 
         {
             Window w = new Payments(sender, uploadedPacks);
 
             w.Show();
            
         }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e) // Кнопка "Выделить все"
+        private void Button_Click_1(object sender, RoutedEventArgs e) 
         {
-          string tableSelected =  tabItemW.IsSelected ? "Worklist" : "ExportList"; // Проверяем, какая вкладка является активной
+          string tableSelected =  tabItemW.IsSelected ? "Worklist" : "ExportList"; 
 
             if (Model.GlobalParameters.selectAllFlag == false)
             {
@@ -128,12 +118,9 @@ namespace kassa
                 }
                 Model.GlobalParameters.selectAllFlag = false;
             }
-                
-
- 
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e) // Кнопка "Обратить выделение"
+        private void Button_Click_2(object sender, RoutedEventArgs e) 
         {
             string tableSelected = tabItemW.IsSelected ? "Worklist" : "ExportList";
             for (int i = 0; i < Model.GlobalParameters.worklistDataset.Tables[tableSelected].Rows.Count; i++)
@@ -146,16 +133,13 @@ namespace kassa
                 }
                 else dr["isChecked"] = true;
 
-
             }
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e) // Кнопка "Выгрузить выделенные"
+        private void Button_Click_3(object sender, RoutedEventArgs e) 
         {
-
             Thread t = new Thread(Model.DataGridUtilities.ExportData);
-            t.Start();
-           
+            t.Start();           
 
         }
 
@@ -185,14 +169,13 @@ namespace kassa
                 btnReconnect.Visibility = Visibility.Visible;
             }
 
-        } // Кнопка "Показать"
+        } 
 
-        private void Button_Click_4(object sender, RoutedEventArgs e) // Кнопка "Очистить список"
+        private void Button_Click_4(object sender, RoutedEventArgs e) 
         {
             
                 string tableSelected = tabItemW.IsSelected ? "Worklist" : "ExportList";
                  Model.GlobalParameters.worklistDataset.Tables[tableSelected].Clear();
-
                 
         }
 
