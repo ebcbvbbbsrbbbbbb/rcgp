@@ -121,9 +121,7 @@
                 </TabItem.Header>
                 <TabItem.Content>
                     <DataGrid Width="Auto" EnableRowVirtualization="False" EnableColumnVirtualization="False" x:Name="MainGrid" IsReadOnly="False" AutoGenerateColumns="False" ItemsSource="{Binding}" CanUserAddRows="False">
-
-
-                        <DataGrid.Columns>
+                           <DataGrid.Columns>
                             <DataGridTemplateColumn Width="30" x:Name="cbWorkList">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -132,7 +130,6 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--<DataGridCheckBoxColumn Binding="{Binding isChecked}" IsReadOnly="False" IsThreeState="False" ClipboardContentBinding="{x:Null}" x:Name="cbWorkList"/>-->
                             <DataGridTextColumn Width="*" Binding="{Binding pack_id}" IsReadOnly="True" Header="Номер пачки"></DataGridTextColumn>
                             <DataGridTextColumn Width="*" Binding="{Binding pack_total, StringFormat=\{0:N2\}}" IsReadOnly="True" Header="Сумма"></DataGridTextColumn>
                             <DataGridTextColumn Width="*" Binding="{Binding pack_date, StringFormat=\{0:dd.MM.yyyy\}}" IsReadOnly="True" Header="Дата пачки"></DataGridTextColumn>
@@ -169,7 +166,6 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--<DataGridCheckBoxColumn Binding="{Binding isChecked}" IsReadOnly="False" IsThreeState="False" ClipboardContentBinding="{x:Null}" x:Name="cbExportList"/>-->
                             <DataGridTextColumn Width="*"  Binding="{Binding pack_id}" IsReadOnly="True" Header="Номер пачки"></DataGridTextColumn>
                             <DataGridTextColumn Width="*" Binding="{Binding pack_total, StringFormat=\{0:N2\}}" IsReadOnly="True" Header="Сумма"></DataGridTextColumn>
                             <DataGridTextColumn Width="*" Binding="{Binding pack_date, StringFormat=\{0:dd.MM.yyyy\}}" IsReadOnly="True" Header="Дата пачки"></DataGridTextColumn>
@@ -184,9 +180,7 @@
 
         </TabControl>
         <DockPanel  Grid.Column="2"  Grid.Row="1"  Height="auto" Grid.RowSpan="2"  >
-
-
-            <Viewbox VerticalAlignment="Top" Margin="20,0,20,0" MaxWidth="300" HorizontalAlignment="Center"/>
+        <Viewbox VerticalAlignment="Top" Margin="20,0,20,0" MaxWidth="300" HorizontalAlignment="Center"/>
         </DockPanel>
         <DockPanel Grid.Row="2" Grid.Column="2">
             <StackPanel>
@@ -202,8 +196,7 @@
                 <TextBlock FontSize="16" Margin="10, 0 0 0 ">Общая сумма:</TextBlock>
                     <TextBlock HorizontalAlignment="Right" Name="packsSum" FontSize="16" FontWeight="Bold" Foreground="CadetBlue" Margin="10, 0 25 0 ">0</TextBlock>
             </DockPanel>
-            </StackPanel>         
-            
+            </StackPanel>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2">
             <ProgressBar Name="prBar" Margin="5, 0,5,5" VerticalAlignment="Bottom" Height="35">
@@ -215,9 +208,5 @@
                 </ProgressBar.Foreground>
             </ProgressBar>
         </DockPanel>
-
-
-
-
     </Grid>
 </Window>
