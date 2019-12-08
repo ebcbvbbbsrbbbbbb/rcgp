@@ -225,8 +225,7 @@
                                 IsReadOnly="False"
                                 CanUserResizeColumns="True"
                                 Style="{StaticResource innerGridStyle}" CanUserDeleteRows="False"
-                                x:Name="InnerGrid" CanUserSortColumns="True"
-                        
+                                x:Name="InnerGrid" CanUserSortColumns="True"                        
                                 >
                         <DataGrid.Columns>
                             <DataGridTextColumn Width="*" Header="Дата платежа"  IsReadOnly="True" Binding="{Binding Path=Date}">
@@ -292,8 +291,7 @@
                     </DataGrid>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
-        </DataGrid>
-       
+        </DataGrid>       
         <StackPanel Grid.Row="1" Grid.Column="2" x:Name="saveBlock">
             <DockPanel Background="Transparent"  x:Name="BlockSent">
                 <StackPanel>
