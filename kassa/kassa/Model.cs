@@ -135,7 +135,7 @@ namespace kassa
             private bool _isChecked = false;
             private decimal _correction = 0;
             private PaymentsGroup _parent; // Ссылка на объект, содержащий платеж
-            private decimal _oldValue = 0; // При коррекции суммы платежа, сюда сохраняем старое значение, чтобы была возможность отменить ввод.
+            private decimal _oldValue = 0; 
             private string _isp_name;
             private string _isp_inn;
             private int _isp_id;
@@ -176,12 +176,10 @@ namespace kassa
             public decimal Correction
             {
                 get { return _correction; }
-                set { //_correction = value;
+                set { 
                    _correction = Model.Utility.CorrectPayment(this, value);
-                    //Parent.Total += _correction;
                     OnPropertyChanged("Correction");
-                   
-                }
+                    }
             }
             public decimal OldValue
             {
@@ -213,8 +211,7 @@ namespace kassa
                 get { return _value; }
                 set { _value = value;
                     OnPropertyChanged("Value");
-                   
-                }
+                     }
             }
 
             public bool IsChecked
@@ -224,8 +221,8 @@ namespace kassa
                                       
                     _isChecked = value;
                     OnPropertyChanged("IsChecked");
-                    if (value == true) { Parent.HowManyRecordsChecked += 1;} // Чтобы знать, сколько записей
-                    else Parent.HowManyRecordsChecked -= 1;                   // в данной группе выделено  
+                    if (value == true) { Parent.HowManyRecordsChecked += 1;} 
+                    else Parent.HowManyRecordsChecked -= 1;                    
                      }
             }
             public Payment (PaymentsGroup _parent, string payment_date, string service_name, decimal payment_value, string _isp_inn, string _isp_name, int _isp_id, int _isSent )
@@ -262,7 +259,7 @@ namespace kassa
             private int _payment_id; //ID платежа
             private decimal _total = 0; // Сумма платежей данного лицевого 
             private ObservableCollection<Payment> _paymentsCollection; // Коллекция конкретных платежей по услугам данного лицевого
-            private int _iscorrect = 0; // Есть ли в этой группе отрицательные платежи (отрицательные не выгружаются)
+            private int _iscorrect = 0; // Есть ли в этой группе отрицательные платежи 
             private int _pack_id; // ID пачки
             private string _source; // Источник платежа
             private string _email = "";
@@ -271,13 +268,12 @@ namespace kassa
             private string _vipiska_date;
             private decimal _pack_total;
             private int _docsnum;
-            private int _howManyRecordsChecked = 0; //Сколько платежей выделено в данной группе
+            private int _howManyRecordsChecked = 0; 
             public PaymentsGroup() { }
             public object Clone()
             {
                 var _clonedPayments = this.PaymentsCollection.Select(i => (Payment)i.Clone()).ToList();
                 this.Total = _clonedPayments.Select(i => i.Parent.Total).Sum();
-                //_clonedPayments.Select(i => i.Parent = this);
                 _clonedPayments.Select(i => i.Parent = null); 
                 ObservableCollection<Payment> clonedPayments = new ObservableCollection<Payment>(_clonedPayments);
                 PaymentsGroup clonedObject = new PaymentsGroup(this.IsCorrect, this.PackId, this.Occ, this.PaymentId, this.Email, clonedPayments, this.Source, this.Pack_date, this.Vipiska_id, this.Vipiska_date, this.Pack_total, this.Docsnum);
@@ -351,8 +347,7 @@ namespace kassa
                         else { _iscorrect = 0; }
                     }
                     else _iscorrect = 0;
-                  //  MessageBox.Show(_iscorrect.ToString());
-                    OnPropertyChanged("IsCorrect");
+                   OnPropertyChanged("IsCorrect");
 
                 }
             }
@@ -440,8 +435,6 @@ namespace kassa
                 get { return host; }
                 set { host = value; }
             }
-
-
             public static decimal saldo {
                 get { return _saldo;}
                 set { _saldo = value;
@@ -449,9 +442,9 @@ namespace kassa
                 }
 
             }
-            public static DataSet packsDataset; // Список таблиц (пачек), подготовленных к выгрузке. Одна таблица - одна пачка. 
+            public static DataSet packsDataset; 
             public static Saldo saldoObject;
-            public static List<int> savedPackId; // Список идентификаторов пачек, которые мы редактировали и которые сохранены локально в коллекции savedPacks 
+            public static List<int> savedPackId; 
 
         }
         public class Saldo:INotifyPropertyChanged
@@ -561,8 +554,7 @@ namespace kassa
 
             public static string makeConnectionString(string serverName, string dbName, string userName, string userPassword, int connectionTimeout)
             {
-                //Data Source=PSKOVSQL;Initial Catalog=it_gh;User ID=sa;Password=***********;Connect Timeout=999
-                return "Data Source=" + serverName + ";Initial Catalog=" + dbName + ";User ID=" + userName + ";Password=" + userPassword + ";Connect Timeout=" + connectionTimeout.ToString();
+               return "Data Source=" + serverName + ";Initial Catalog=" + dbName + ";User ID=" + userName + ";Password=" + userPassword + ";Connect Timeout=" + connectionTimeout.ToString();
 
             }
          public static void connectToDatabase(string connectionString)
@@ -826,11 +818,9 @@ namespace kassa
                 command.CommandText = "dbo.InsertToHistory"; 
                 command.Parameters.Add(new SqlParameter("@table", Model.GlobalParameters.worklistDataset.Tables["payingsToAdd"]));
                 command.ExecuteNonQuery();
-
-                // Начинаем формировать тектовый документ с выгружаемыми платежами
                 string filePath = "";
-                decimal total = 0; // Сумма платежей по одному paying_id
-                decimal total2 = 0; // Сумма всех платежей
+                decimal total = 0; 
+                decimal total2 = 0; 
                 int paymentsCount = Model.GlobalParameters.worklistDataset.Tables["forExport"].Rows.Count; // Общее количество платежей
                 SaveFileDialog sf = new SaveFileDialog();
                 sf.Filter = "*.csv|.csv";
@@ -872,16 +862,13 @@ namespace kassa
                         sw.Write("|" + total.ToString("f2")); // В конце строки выводим итоговую сумму платежей по данному paying_id
                         sw.Write("\r\n");
                         total = 0;
-
                     }
 
                     sw.Close();
                     MessageBox.Show("Файл сохранен: " + filePath);
                 }
                 MessageBox.Show(totalSum.ToString());
-                MessageBox.Show(total2.ToString());
-
-                //Удаляем выгруженные записи из таблиц ExportList и Worklist
+                MessageBox.Show(total2.ToString());              
                 packsNew.Clear();
                 packsOld.Clear();
                 List<DataRow> rowsToDeleteEL = new List<DataRow>(Model.GlobalParameters.worklistDataset.Tables["ExportList"].Select("isChecked = true").ToList());
@@ -925,8 +912,6 @@ namespace kassa
                 (ds.Tables["ExportList"].AsDataView()).Sort = "isCorrect";
 
             }
-
-            
         }
     }
 }
