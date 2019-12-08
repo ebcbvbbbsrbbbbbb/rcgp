@@ -102,10 +102,6 @@ namespace kassa
 
         }
     }
-
-
-
-
         public class InnerCellColorConverter : IMultiValueConverter //Конвертер цветов ячеек внутреннего грида
     {
         object returnValue;
@@ -136,8 +132,7 @@ namespace kassa
                     else
                     {
                         returnValue = new SolidColorBrush(Colors.OrangeRed); //#e8d792
-                    }
-               
+                    }               
             }
 
             return returnValue;
@@ -147,7 +142,6 @@ namespace kassa
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-
         }
     }
 
@@ -176,7 +170,6 @@ namespace kassa
                     default:
                         returnValue = null;
                         break;
-
                 }
             }
             else
@@ -244,13 +237,9 @@ namespace kassa
         public static Dictionary<int, ObservableCollection<Model.PaymentsGroup>> sourcePacks; 
         public int paymQuantity { get; set; } = 0;
 
-
-        //-----------------------------------------------------------------------------------------------------------------------
         public Payments(){}
         public Payments(object selectedPack, Dictionary<string,string> uploadedPacks)
         {
-            
-            
             InitializeComponent();
             Model.Saldo saldo = new Model.Saldo();
             Model.GlobalParameters.saldoObject = saldo;
@@ -262,10 +251,9 @@ namespace kassa
             negativePayments = new DataTable("negativePayments");
             negativePayments.Columns.Add("occ_id", Type.GetType("System.Int32"));
             negativePayments.Columns.Add("value", Type.GetType("System.Decimal"));
-            grOccPayments.ItemsSource = occPayments.DefaultView;
-            
+            grOccPayments.ItemsSource = occPayments.DefaultView;            
             autodeleteProperty = new Dictionary<string, int>(); 
-            Model.GlobalParameters.saldo = 0; // "Баланс" при редактировании платежей в пачке
+            Model.GlobalParameters.saldo = 0; 
             Model.WindowElements.saldoLabel = lblSaldo;
             Model.WindowElements.saldoLabel.Text = Model.GlobalParameters.saldo.ToString("N2");
             SqlCommand cmd = new SqlCommand();
@@ -282,12 +270,7 @@ namespace kassa
             grOccNegative.ItemsSource = negativeSummary;
             grOccPayments.ItemsSource = occSummary;
             Model.WindowElements.PaymentsGrid.Items.Clear();
-           
-    
 
-            //Создаем словарь для хранения исходного состояния пачек, чтобы в случае их редактирования
-            //была возможность восстановить их начальное состояние по нажатию кнопки "Загрузить исходную",
-            //из локальной копии.
             if (sourcePacks == null)
             {        
                 sourcePacks = new Dictionary<int, ObservableCollection<Model.PaymentsGroup>>();
@@ -317,10 +300,6 @@ namespace kassa
                 }
                 
                 else
-
-                //Если пачки нет среди сохраненных и среди исходных, возможны два вариант - пачка уже выгружалась ранее, и тогда мы должны
-                //взять платежи этой пачки из таблицы kassa_history и запретить возможность редактирования платежей,
-                //и когда пачка еще не выгружалась, и тогда информацию по платежам берем из таблицы kassa_payments.
 
                 {
                   
@@ -364,7 +343,6 @@ namespace kassa
                     
                 }
 
-
             }
 
             PaymentsGrid.ItemsSource = o;
@@ -374,8 +352,6 @@ namespace kassa
             var _source = ((ObservableCollection < Model.PaymentsGroup >)PaymentsGrid.ItemsSource).Select(i => (Model.PaymentsGroup)i.Clone()).ToList();
             sourcePacks.Add(currentPack, new ObservableCollection<Model.PaymentsGroup>(_source)); 
             }
-           
-
         }
 
         private void OnChecked(object sender, RoutedEventArgs e)
@@ -459,15 +435,8 @@ namespace kassa
             }
         }
 
-        private void PaymentsGrid_LoadingRow(object sender, DataGridRowEventArgs e) // Загрузка строк
-        {
-        }
 
-        private void PaymentsGrid_LoadingRowDetails(object sender, DataGridRowDetailsEventArgs e)  // Установка деталей строк (итого)
-        {
-        }
-
-        private void PaymentsGrid_Loaded(object sender, RoutedEventArgs e) // Вывод деталей пачки
+        private void PaymentsGrid_Loaded(object sender, RoutedEventArgs e) 
         {
             SqlParameter p = new SqlParameter("@pack_id", System.Data.SqlDbType.Int);
             p.Value = (int)currentPack;            
@@ -503,20 +472,6 @@ namespace kassa
 
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-
-        }
-
-
-
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void CheckBox_Checked_1(object sender, RoutedEventArgs e) // Галочка "Исключить"
         {
 
@@ -539,12 +494,5 @@ namespace kassa
             currentPayment.Parent.HowManyRecordsChecked -= 1;
 
         }
-
-        private void FrameworkElement_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-
     }
 }
