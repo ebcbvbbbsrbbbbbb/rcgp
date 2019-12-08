@@ -16,7 +16,6 @@ namespace kassa
         static string userName;
         static string password;
         static string connTimeout;
-        //Data Source=PSKOVSQL;Initial Catalog=it_gh;User ID=sa;Password=***********;Connect Timeout=999
         static string connString = "Data Source=" + dataSource + ";Initial Catalog=" + initialCatalog + "; User ID=" + userName + "Password=" + password;
         public static void createConnection(string dataSource, string initialCatalog, string userName, string password, string connTimeout, Label lb)
         {
