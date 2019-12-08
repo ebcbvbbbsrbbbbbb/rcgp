@@ -47,12 +47,8 @@ namespace kassa
     }
     class ViewModel : INotifyPropertyChanged
     {
-
-
-
         public ViewModel(object o, DataGrid ExportGrid, ComboBox cmbInterval, StackPanel calendPanel)
-        {
-            
+        {            
             Model.GlobalParameters.packsDataset = new DataSet();
             Model.GlobalParameters.selectAllFlag = false;
             Model.GlobalParameters.worklistDataset = new DataSet();
@@ -121,13 +117,8 @@ namespace kassa
 
             Model.WindowElements.workListDataGrid.ItemsSource = Model.GlobalParameters.worklistDataset.Tables["Worklist"].DefaultView;
             Model.WindowElements.exportListDataGrid.ItemsSource = Model.GlobalParameters.worklistDataset.Tables["ExportList"].DefaultView;
-            Model.GlobalParameters.savedPackId = new List<int>();
-            
+            Model.GlobalParameters.savedPackId = new List<int>();            
         }
-
-
-
-
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged(string prop) 
         {
@@ -136,8 +127,7 @@ namespace kassa
                 PropertyChanged(this,new PropertyChangedEventArgs(prop));
                 
             }
-        }
-      
+        }     
 
     }
     
