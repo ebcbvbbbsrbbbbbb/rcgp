@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:kassa"    
-        Loaded="Window_Loaded"        
+        xmlns:local="clr-namespace:kassa"
         mc:Ignorable="d"            
         Title="Просмотр платежей" Height="450" Width="800"
         WindowState="Maximized">
@@ -146,8 +145,7 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid 
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            Unloaded="PaymentsGrid_Unloaded" Loaded="PaymentsGrid_Loaded"                      
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"                          
              EnableRowVirtualization="True" 
              EnableColumnVirtualization="True"
              VirtualizingStackPanel.VirtualizationMode="Standard"
@@ -157,10 +155,8 @@
                   Grid.Column="1" Grid.Row="1" CanUserReorderColumns="True"
                   HorizontalGridLinesBrush="White" VerticalGridLinesBrush="White" CanUserSortColumns="True" 
                   AreRowDetailsFrozen="True" SelectionMode="Single" CanUserDeleteRows="False"          
-                  HeadersVisibility="Column" GridLinesVisibility="Vertical"    
-                  
+                  HeadersVisibility="Column" GridLinesVisibility="Vertical"
                   RowDetailsVisibilityMode="VisibleWhenSelected">
-           
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Style.Triggers>
@@ -233,7 +229,6 @@
                                     <Style TargetType="DataGridCell">
                                         <Setter Property="Template" Value="{StaticResource InnerGridCellStyle}"/>
                                         <Setter Property="Background" Value="#FF95F3EB"/>
-                                       
                                     </Style>
                                 </DataGridTextColumn.CellStyle>
                             </DataGridTextColumn>
