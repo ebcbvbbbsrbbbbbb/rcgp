@@ -41,14 +41,12 @@ namespace WpfApp1
         {
             InitializeComponent();
             dt = new DataTable();
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) //открыть
         {
             btnOpen.IsEnabled = true;
             btnSave.IsEnabled = true;
-
 
             OpenFileDialog of = new OpenFileDialog();
             of.Filter = "DBF|*.dbf";
@@ -79,10 +77,8 @@ namespace WpfApp1
                     {
                         message += "платеж номер "+ item["NOM"].ToString()+" на сумму " + item["SUMMFY"].ToString() +"\r\n";
                     }
-                    MessageBox.Show("Проставьте тип платежа в итоговом файле для следующих платежей: \r\n" +message);
-                    
+                    MessageBox.Show("Проставьте тип платежа в итоговом файле для следующих платежей: \r\n" +message);                    
                 }
-
                 total = Math.Round(dt.Select().Select(i => ((double)i["summfy"])).Sum(), 2);
                 minDate = (dt.Select().Select(i => ((DateTime)i["data"])).Min()).ToString("dd'/'MM'/'yyyy hh:mm:ss");
                 maxDate = (dt.Select().Select(i => ((DateTime)i["data"])).Max()).ToString("dd'/'MM'/'yyyy hh:mm:ss");
@@ -97,10 +93,6 @@ namespace WpfApp1
                 rDate = DateTime.Now.ToString("dd'/'MM'/'yyyy hh:mm:ss");
                 prBar.Maximum = totalRecords;
                 btnSave.IsEnabled = true;
-
-
-
-
             }
             else return;
         }
@@ -138,7 +130,6 @@ namespace WpfApp1
                     string ce2 = item["ce2"] is DBNull ? "" : Math.Round((double)item["ce2"], 2).ToString();
                     string cb3 = item["cb3"] is DBNull ? "" : Math.Round((double)item["cb3"], 2).ToString();
                     string ce3 = item["ce3"] is DBNull ? "" : Math.Round((double)item["ce3"], 2).ToString();
-
 
 
                     sw.Write("{0};{1}:{2}:{3}:{4}:{5}:{6}:{7}:{8}::::::::;{9};{10}\r\n",
