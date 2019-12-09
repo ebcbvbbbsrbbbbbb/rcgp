@@ -1,0 +1,24 @@
+use Stack
+;
+with temp as (
+select ki.[КвитИсполнители-Счет], (select Номер from stack.[Лицевые счета] where ROW_ID=ki.[КвитИсполнители-Счет]) ЛС,
+(select Родитель from stack.[Лицевые иерархия] where Потомок=ki.[КвитИсполнители-Счет] and РодительТип=3) Дом,
+ ki.Месяц, ki.[КвитИсполнители-Макет], mk.Название, ki.ВхСальдо, ki.ИтогоНачислено, ki.ИсхСальдо,
+ki.ПениДолг, ki.ВхПениДолг, ko.ДЕЗНаим
+from stack.Квит_Исполнители ki
+inner join stack.Квит_Организации ko on ki.[КвитИсполнители-ОргИсп] = ko.ROW_ID
+inner join stack.[Макеты квитанций] mk on mk.ROW_ID = [КвитИсполнители-Макет]
+where (ko.ROW_ID in (29, 14) and ki.Месяц = '20191101' and mk.[Макеты-Получатель]=1305) or 
+(ki.[КвитИсполнители-Счет] in (select distinct потомок from stack.[Лицевые иерархия] where Родитель = 1219)
+and ki.Месяц = '20191101' and ko.ROW_ID = 27 )
+)
+select  temp.*, count(*) over(partition by дезнаим)  from temp where (Дом not in 
+(select Родитель from stack.[Лицевые иерархия] li
+inner join stack.НТариф nt on nt.Счет = li.Потомок
+where Сумма <> 0 and Поставщик=1305 and [Месяц расчета]='20191101' and Аналитика2 <> 777)
+and Дом not in (select distinct Родитель from stack.[Список услуг] su 
+inner join stack.[Типы услуг] tu on tu.ROW_ID=su.[Вид-Услуги]
+inner join stack.[Лицевые иерархия] li on su.[Счет-Услуги] = li.Потомок 
+where tu.[Внешний код 1]=28 and РодительТип = 3 and '20191101' between ДатНач and ДатКнц))
+
+
