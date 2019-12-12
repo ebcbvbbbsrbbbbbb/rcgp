@@ -1,16 +1,32 @@
 use stack
 declare @current_date date, @debt_date date, @root int
-set @current_date =  dateadd(day, 1, dateadd(month, -1, eomonth(getdate())))
+set @current_date = dateadd(day, 1, dateadd(month, -1, eomonth(getdate())))
 set @debt_date = dateadd (MONTH, -3, @current_date)
-set @root = (select row_id from stack.Реестры where Папки_ADD = -10 and [Реестры_состав-Лицевой] = -1 and Название = 'Должники Микрорайон №6') 
+set @root = (select row_id from stack.Реестры where Папки = -10 and [Реестры_состав-Лицевой] = -1 and Название = 'Должники Микрорайон №6')
+
+print @current_date
+print @debt_date
 
 delete from stack.Реестры where Папки = @root
 
-insert into stack.Реестры (Папки, Папки_ADD, [Реестры_состав-Документ], [Реестры_состав-Лицевой], [Реестры_состав-Дом], Номер, ДатНач, ДатКнц, Название, Тип) 
-select distinct @root,1,-1,Счет,-1, 0, null,null, cast(Счет as varchar)+' долг микрорайон №6',2 from stack.НСальдо ns 
-where [Месяц расчета] = @current_date and 
-exists (select top 1 * from stack.НСальдо where Счет = ns.Счет and [Месяц долга] = @debt_date and [Месяц расчета]=@current_date)
+insert into stack.Реестры (Папки, Папки_ADD, [Реестры_состав-Документ], [Реестры_состав-Лицевой], [Реестры_состав-Дом], Номер, ДатНач, ДатКнц, Название, Тип)
+select distinct @root,1,-1,ns.Счет,-1, 0, null,null, stack.[AddrLsShot](Счет,0,1)+' долг микрорайон №6',2
+--,(select SUM(s.Сумма) from stack.НСальдо s where s.Счет = ns.Счет and cast(s.[Месяц долга] as date) <= @debt_date and [Месяц расчета]=@current_date) summ
+from stack.НСальдо ns
+inner join stack.[Лицевые иерархия] li on li.Потомок=ns.Счет and li.ПотомокТип=5 and li.Родитель=209
+where [Месяц расчета] = @current_date and
+exists (select top 1 * from stack.НСальдо where Счет = ns.Счет and cast([Месяц долга] as date) <= @debt_date and [Месяц расчета]=@current_date)
 and ДоговорУК = 2
+and not exists(select 1 from [Stack].[stack].[Свойства] s where s.[Счет-Параметры]=ns.Счет and s.[Виды-Параметры]=31 and s.Значение=2 )--Состяние ЛС
+and not exists(select 1 from [Stack].[stack].[Свойства] s where s.[Счет-Параметры]=ns.Счет and s.[Виды-Параметры]=58 and s.Значение=1 )--Не печатать квитанции
+and (select SUM(s.Сумма) from stack.НСальдо s where s.Счет = ns.Счет and cast(s.[Месяц долга] as date) <= @debt_date and [Месяц расчета]=@current_date)>100
 union
-select distinct @root,1,-1,Счет,-1, 0, null,null, cast(Счет as varchar)+' долг микрорайон №6',2 from stack.ПениСальдо 
+select @root,1,-1,Счет,-1, 0, null,null, stack.[AddrLsShot](Счет,0,1)+' долг микрорайон №6',2
+--,(select SUM(s.Сумма) from stack.НСальдо s where s.Счет = p.Счет and cast(s.[Месяц долга] as date) <= @debt_date and [Месяц расчета]=@current_date) summ
+from stack.ПениСальдо p
+inner join stack.[Лицевые иерархия] li on li.Потомок=p.Счет and li.ПотомокТип=5 and li.Родитель=209
 where Сумма <> 0 and [Месяц расчета] = @current_date and ДоговорУК = 2
+and not exists(select 1 from [Stack].[stack].[Свойства] s where s.[Счет-Параметры]=p.Счет and s.[Виды-Параметры]=31 and s.Значение=2 )--Состяние ЛС
+and not exists(select 1 from [Stack].[stack].[Свойства] s where s.[Счет-Параметры]=p.Счет and s.[Виды-Параметры]=58 and s.Значение=1 )--Не печатать квитанции
+
+order by 9
