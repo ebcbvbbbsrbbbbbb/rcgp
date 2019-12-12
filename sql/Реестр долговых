@@ -1,0 +1,16 @@
+use stack
+declare @current_date date, @debt_date date, @root int
+set @current_date =  dateadd(day, 1, dateadd(month, -1, eomonth(getdate())))
+set @debt_date = dateadd (MONTH, -3, @current_date)
+set @root = (select row_id from stack.Реестры where Папки_ADD = -10 and [Реестры_состав-Лицевой] = -1 and Название = 'Должники Микрорайон №6') 
+
+delete from stack.Реестры where Папки = @root
+
+insert into stack.Реестры (Папки, Папки_ADD, [Реестры_состав-Документ], [Реестры_состав-Лицевой], [Реестры_состав-Дом], Номер, ДатНач, ДатКнц, Название, Тип) 
+select distinct @root,1,-1,Счет,-1, 0, null,null, cast(Счет as varchar)+' долг микрорайон №6',2 from stack.НСальдо ns 
+where [Месяц расчета] = @current_date and 
+exists (select top 1 * from stack.НСальдо where Счет = ns.Счет and [Месяц долга] = @debt_date and [Месяц расчета]=@current_date)
+and ДоговорУК = 2
+union
+select distinct @root,1,-1,Счет,-1, 0, null,null, cast(Счет as varchar)+' долг микрорайон №6',2 from stack.ПениСальдо 
+where Сумма <> 0 and [Месяц расчета] = @current_date and ДоговорУК = 2
