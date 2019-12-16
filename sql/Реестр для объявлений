@@ -1,0 +1,16 @@
+select * from stack.Реестры
+
+declare @root1 int, @root2 int
+set @root1 = (select row_id from stack.Реестры where Название = 'Жилище С ОБЪЯВЛЕНИЕМ')
+set @root2 = (select row_id from stack.Реестры where Название = 'Жилище БЕЗ ОБЪЯВЛЕНИЯ')
+
+insert into Stack.Реестры (Папки, Папки_ADD, [Реестры_состав-Документ], [Реестры_состав-Лицевой], [Реестры_состав-Дом], Номер, ДатНач, ДатКнц, Название, Тип)
+select @root1,1,-1,ROW_ID, -1,0,null,null,stack.[AddrLsShot](ls.ROW_ID ,0,1) +' объявление',2 
+from stack.[Лицевые счета] ls where ROW_ID in (select distinct Потомок from stack.[Лицевые иерархия] where Родитель = 218 and ПотомокТип=5 and Потомок in (select Потомок from stack.[Лицевые иерархия] where Родитель in
+(1424,1425,1426,1427,1428, 1454, 1460, 1461, 1462, 1457, 1459, 1323, 1452, 1450, 1473, 1353,1351,1352,1306,1445, 1447, 1479, 1481, 1484, 1453, 1276, 1398, 1282, 1291) ) ) 
+
+insert into Stack.Реестры (Папки, Папки_ADD, [Реестры_состав-Документ], [Реестры_состав-Лицевой], [Реестры_состав-Дом], Номер, ДатНач, ДатКнц, Название, Тип)
+select @root2,1,-1,ROW_ID, -1,0,null,null,stack.[AddrLsShot](ls.ROW_ID ,0,1) +' без объявления',2 
+from stack.[Лицевые счета] ls where ROW_ID in (select distinct Потомок from stack.[Лицевые иерархия] where Родитель = 218 and ПотомокТип=5) and ls.ROW_ID not in (select [Реестры_состав-Лицевой] from stack.Реестры where Папки = @root1 )
+
+
