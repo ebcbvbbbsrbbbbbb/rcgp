@@ -1,0 +1,57 @@
+-- Задание №1
+
+-- 1) Все образцы, в т.ч. не имеющие испытаний
+SELECT o.ORDNO, o.USRNAME, ot.TESTCODE, ot.TESTNAME
+FROM
+ORDERS o LEFT JOIN ORDTASK ot
+ON o.ORDNO = ot.ORDNO
+
+-- Только те, по которым есть испытания
+SELECT o.ORDNO, o.USRNAME, ot.TESTCODE, ot.TESTNAME
+FROM
+ORDERS o INNER JOIN ORDTASK ot
+ON o.ORDNO = ot.ORDNO
+
+
+-- 2) 
+SELECT DISTINCT ot.ORDNO 
+FROM ORDTASK ot
+WHERE ot.TESTCODE = 123
+
+
+-- 3) 
+SELECT DISTINCT o.USRNAME
+FROM
+ORDERS o INNER JOIN ORDTASK ot
+ON o.ORDNO = ot.ORDNO
+WHERE ot.TESTNAME LIKE 'Измерения р%'
+
+
+
+
+// Задание №2
+public static class Utils
+    {
+        public static void quickSort(int[] arr, int startIndex, int endIndex)
+        {
+            int temp;
+            int pivot = arr[(endIndex - startIndex) / 2 + startIndex];
+            int i = startIndex, j = endIndex;
+            while (i <= j)
+            {
+                while (arr[i] < pivot && i <= endIndex) i++;
+                while (arr[j] > pivot && j >= startIndex) j--;
+                if (i <= j)
+                {
+                    temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                    i++;
+                    j--;
+                }
+            }
+            if (j > startIndex) quickSort(arr, startIndex, j);
+            if (i < endIndex) quickSort(arr, i, endIndex);
+        }
+        
+    }
