@@ -1,6 +1,6 @@
 namespace TestTask
 {
-    public static class Utility
+     public static class Utility
     {
         public static void BubbleSort(int[] arr)
         {
@@ -24,7 +24,7 @@ namespace TestTask
         public static void HalfSort(int[] sourceArray, out int[] resultFirst, out int[] resultSecond, int startIndex, int endIndex)
         {
 
-            int pivotPoint = (startIndex < endIndex) ? (endIndex + startIndex) / 2 : 0;
+            int pivotPoint = (startIndex > endIndex || endIndex > sourceArray.GetUpperBound(0)||startIndex < sourceArray.GetLowerBound(0)) ? 0: (endIndex + startIndex) / 2;
             if (pivotPoint == 0)
             {
                 resultFirst = null;
@@ -74,10 +74,10 @@ namespace TestTask
         public MainWindow()
         {
             InitializeComponent();
-            int[] a = new int[] { 1,6,3,4,8,1,9,0};
+            int[] a = new int[] { 1, 6, 3, 4, 8, 1, 9, 0 };
             int startIndex = 0;
-            int endIndex = a.Length - 1;
-            string result = Utility.SortMerge(a, startIndex, endIndex) != null? string.Join(',', Utility.SortMerge(a,startIndex,endIndex)):"Начальный индекс больше конечного";
+            int endIndex = a.Length-1;
+            string result = Utility.SortMerge(a, startIndex, endIndex) != null? string.Join(',', Utility.SortMerge(a,startIndex,endIndex)):"Неверно указаны границы массива";
             string source = string.Join(',', a);
             MessageBox.Show("Source: " + source); // 1,6,3,4,8,1,9,0
             MessageBox.Show("Sorted: " + result); // 1,3,4,6,0,1,8,9
