@@ -11,7 +11,7 @@ DECLARE
 DECLARE cOcc CURSOR FOR
 select
 -- top 20 
-ml.occ,sum(oa.SALDO),case oa.service_id when 'Э/Э ' then 'Осв ' when 'ОсвЧ' then 'Осв ' else oa.service_id end
+ml.occ,sum(oa.SALDO),case oa.service_id when 'Гќ/Гќ ' then 'ГЋГ±Гў ' when 'ГЋГ±ГўГ—' then 'ГЋГ±Гў ' else oa.service_id end
 from 
   mr11.dbo.occupations mo
   inner join mr11.dbo.OCC_ACCOUNTS oa on oa.OCC_ID=mo.ID
@@ -22,11 +22,11 @@ from
   inner join [it_gh].dbo.TECH_SUBDIVISIONS t on t.ID=b.TECHSUBDIV_ID    
   where t.IS_HISTORY=1 
  and b.TECHSUBDIV_ID in (41,91) 
- and oa.service_id in ('АД_Г','АД_С','ВМ  ','Л   ','ОсвЧ','Осв ','ОТ  ','ГВ  ','ГВ_И','ХВ_Г','Э/Э ')
+ and oa.service_id in ('ГЂГ„_Гѓ','ГЂГ„_Г‘','Г‚ГЊ  ','Г‹   ','ГЋГ±ГўГ—','ГЋГ±Гў ','ГЋГ’  ','ГѓГ‚  ','ГѓГ‚_Г€','Г•Г‚_Гѓ','Гќ/Гќ ')
   and oa.saldo<>0
   
  -- and not exists(select 1 from [it_gh].dbo.occ_accounts noa where noa.occ_id=ml.occ and noa.service_id=ms.serv) and not ms.SERV in ('2008','1008')
-group by ml.occ,case oa.service_id when 'Э/Э ' then 'Осв ' when 'ОсвЧ' then 'Осв ' else oa.service_id end
+group by ml.occ,case oa.service_id when 'Гќ/Гќ ' then 'ГЋГ±Гў ' when 'ГЋГ±ГўГ—' then 'ГЋГ±Гў ' else oa.service_id end
   order by ml.occ
   
 
@@ -36,15 +36,15 @@ OPEN cOcc
 	BEGIN 
 	--print 'LS '+cast(@occ as varchar(15))+' srv '+cast(@servid as varchar(5))+' sald '+cast(@saldo as varchar(15))
 	set @servid=case @servid 
-	when 'Осв ' then '1008'
-	when 'АД_Г' then 'адга'
-	when 'АД_С' then 'авди'
-	when 'ВМ  ' then '1015'
-	when 'Л   ' then 'лифт'
-	when 'ГВ  ' then '1004'
-	when 'ГВ_И' then '1020'
-	when 'ХВ_Г' then '1014'
-	when 'ОТ  ' then 'отоп'
+	when 'ГЋГ±Гў ' then '1008' 
+	when 'ГЂГ„_Гѓ' then 'Г Г¤ГЈГ '
+	when 'ГЂГ„_Г‘' then 'Г ГўГ¤ГЁ'
+	when 'Г‚ГЊ  ' then '1015'
+	when 'Г‹   ' then 'Г«ГЁГґГІ'
+	when 'ГѓГ‚  ' then '1004'
+	when 'ГѓГ‚_Г€' then '1020'
+	when 'Г•Г‚_Гѓ' then '1014'
+	when 'ГЋГ’  ' then 'Г®ГІГ®ГЇ'
 	else @servid
 	 end
 	set @nservid=@servid 
@@ -53,7 +53,7 @@ OPEN cOcc
    	   if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1004' and  cl.MANAGEMENT_COMPANY_ID in (41,91))
 	    set @nservid='1004'
 	    else
-	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1020' and cl.MANAGEMENT_COMPANY_ID in (41,91))--ИТП
+	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1020' and cl.MANAGEMENT_COMPANY_ID in (41,91))--Г€Г’ГЏ
 	   set @nservid='1020'
 	   
 	   
@@ -62,7 +62,7 @@ OPEN cOcc
   	   if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1013' and  cl.MANAGEMENT_COMPANY_ID in (41,91))
 	    set @nservid='1013'
 	   else
-	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1021' and cl.MANAGEMENT_COMPANY_ID in (41,91))--ИТП
+	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1021' and cl.MANAGEMENT_COMPANY_ID in (41,91))--Г€Г’ГЏ
 	   set @nservid='1021'
 	      
 	   
@@ -70,21 +70,21 @@ OPEN cOcc
   	   if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1014' and  cl.MANAGEMENT_COMPANY_ID in (41,91))
 	    set @nservid='1014'
 	    else
-	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1019' and cl.MANAGEMENT_COMPANY_ID in (41,91))--ИТП
+	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1019' and cl.MANAGEMENT_COMPANY_ID in (41,91))--Г€Г’ГЏ
 	   set @nservid='1019'
 	     
 	   	   
 	   
-	if @servid in ('элек','элво','элпл')
+	if @servid in ('ГЅГ«ГҐГЄ','ГЅГ«ГўГ®','ГЅГ«ГЇГ«')
 	begin
-	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='элек' and  cl.MANAGEMENT_COMPANY_ID in (41,91))
-	    set @nservid='элек'
+	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='ГЅГ«ГҐГЄ' and  cl.MANAGEMENT_COMPANY_ID in (41,91))
+	    set @nservid='ГЅГ«ГҐГЄ'
 	   else 
-	   if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='элво' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
-	   set @nservid='элво'
+	   if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='ГЅГ«ГўГ®' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
+	   set @nservid='ГЅГ«ГўГ®'
 	   else
-	    if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='элпл' and  cl.MANAGEMENT_COMPANY_ID in (41,91))--
-	   set @nservid='элпл'
+	    if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='ГЅГ«ГЇГ«' and  cl.MANAGEMENT_COMPANY_ID in (41,91))--
+	   set @nservid='ГЅГ«ГЇГ«'
 	   else 	
 	   if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1008'  and cl.MANAGEMENT_COMPANY_ID in (41,91))
 	    set @nservid='1008'	
@@ -92,21 +92,21 @@ OPEN cOcc
     if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='2008' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
 	   set @nservid='2008'	   
 	   else
-    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='освл' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
-	   set @nservid='освл'	
+    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='Г®Г±ГўГ«' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
+	   set @nservid='Г®Г±ГўГ«'	
 	end   
 	-- 
 	   
 	if @servid='1015'
 	   if not exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1015'  and cl.MANAGEMENT_COMPANY_ID in (41,91))
 	   begin
-	   if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='вывм' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
-	   set @nservid='вывм'	
+	   if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='ГўГ»ГўГ¬' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
+	   set @nservid='ГўГ»ГўГ¬'	
 	   	   
 	   end  
 	   
 		   
-	if @servid in ('1008','2008','освл')
+	if @servid in ('1008','2008','Г®Г±ГўГ«')
 	begin
 	 if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='1008'  and cl.MANAGEMENT_COMPANY_ID in (41,91))
 	    set @nservid='1008'	
@@ -114,17 +114,17 @@ OPEN cOcc
     if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='2008' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
 	   set @nservid='2008'	   
 	   else
-    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='освл' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
-	   set @nservid='освл'	
+    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='Г®Г±ГўГ«' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
+	   set @nservid='Г®Г±ГўГ«'	
        else
-    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='элек' and  cl.MANAGEMENT_COMPANY_ID in (41,91))
-      set @nservid='элек'
+    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='ГЅГ«ГҐГЄ' and  cl.MANAGEMENT_COMPANY_ID in (41,91))
+      set @nservid='ГЅГ«ГҐГЄ'
       else
-    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='элво' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
-	   set @nservid='элво'
+    if  exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='ГЅГ«ГўГ®' and cl.MANAGEMENT_COMPANY_ID in (41,91))--
+	   set @nservid='ГЅГ«ГўГ®'
 	   else
-    if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='элпл' and  cl.MANAGEMENT_COMPANY_ID in (41,91))--
-	   set @nservid='элпл'	      
+    if exists(select 1 from [it_gh].[dbo].CONSMODES_LIST cl where cl.OCC_ID=@occ and cl.SERVICE_ID='ГЅГ«ГЇГ«' and  cl.MANAGEMENT_COMPANY_ID in (41,91))--
+	   set @nservid='ГЅГ«ГЇГ«'	      
 
 
     end
@@ -145,12 +145,12 @@ OPEN cOcc
          from [it_gh].[dbo].OCC_ACCOUNTS oa
          where oa.OCC_ID=@occ and oa.SERVICE_ID=@nservid 
          
-             update [it_gh].[dbo].occupations --Неэффективно конечно каждый раз дергать
+             update [it_gh].[dbo].occupations --ГЌГҐГЅГґГґГҐГЄГІГЁГўГ­Г® ГЄГ®Г­ГҐГ·Г­Г® ГЄГ Г¦Г¤Г»Г© Г°Г Г§ Г¤ГҐГ°ГЈГ ГІГј
     set saldo=(select SUM(saldo) from OCC_ACCOUNTS where OCC_ID=@occ)
     where id=@occ;
 
      
-   -- exec [it_gh].[dbo].ad_SetTechCorrectWitchDoc @occ,@nservid,45,@saldo      -- 15 - Номер док получить по exec ad_GetDocsList 1
+   -- exec [it_gh].[dbo].ad_SetTechCorrectWitchDoc @occ,@nservid,45,@saldo      -- 15 - ГЌГ®Г¬ГҐГ° Г¤Г®ГЄ ГЇГ®Г«ГіГ·ГЁГІГј ГЇГ® exec ad_GetDocsList 1
     Commit Transaction tran1
     End Try
      Begin Catch
@@ -168,11 +168,11 @@ OPEN cOcc
     END;  
 		
 CLOSE cOcc
-DEALLOCATE cOcc  	--После всего надо перерасчет запустить	
+DEALLOCATE cOcc  	--ГЏГ®Г±Г«ГҐ ГўГ±ГҐГЈГ® Г­Г Г¤Г® ГЇГҐГ°ГҐГ°Г Г±Г·ГҐГІ Г§Г ГЇГіГ±ГІГЁГІГј	
 
 -------------------------
 -------------------------
---Холодная вода и канализация
+--Г•Г®Г«Г®Г¤Г­Г Гї ГўГ®Г¤Г  ГЁ ГЄГ Г­Г Г«ГЁГ§Г Г¶ГЁГї
 
 use it_gh
 set nocount on
@@ -187,8 +187,8 @@ DECLARE
 DECLARE cOcc CURSOR FOR
 select
 -- top 20 
-ml.occ,sum(oa.SALDO),case oa.service_id when 'ХВГВ' then 'ХВОД' when 'ХВВК' then 'ХВ  ' when 'ХВП ' then 'ИТГВ'
-                when 'КИГВ' then 'КанИ' when 'КГГВ' then 'КанГ' when 'КХГВ' then 'КанХ'
+ml.occ,sum(oa.SALDO),case oa.service_id when 'Г•Г‚ГѓГ‚' then 'Г•Г‚ГЋГ„' when 'Г•Г‚Г‚ГЉ' then 'Г•Г‚  ' when 'Г•Г‚ГЏ ' then 'Г€Г’ГѓГ‚'
+                when 'ГЉГ€ГѓГ‚' then 'ГЉГ Г­Г€' when 'ГЉГѓГѓГ‚' then 'ГЉГ Г­Гѓ' when 'ГЉГ•ГѓГ‚' then 'ГЉГ Г­Г•'
                 else oa.service_id end
 from 
   mr11.dbo.occupations mo
@@ -200,12 +200,12 @@ from
   inner join [it_gh].dbo.TECH_SUBDIVISIONS t on t.ID=b.TECHSUBDIV_ID    
   where t.IS_HISTORY=1 
  and b.TECHSUBDIV_ID in (41,91) 
- and oa.service_id in ('ИТГВ','ХВП ','КанИ  ','КИГВ','КанГ','КанХ ','КГГВ','КХГВ  ','ХВВК','ХВ  ','ХВГВ','ХВОД')
+ and oa.service_id in ('Г€Г’ГѓГ‚','Г•Г‚ГЏ ','ГЉГ Г­Г€  ','ГЉГ€ГѓГ‚','ГЉГ Г­Гѓ','ГЉГ Г­Г• ','ГЉГѓГѓГ‚','ГЉГ•ГѓГ‚  ','Г•Г‚Г‚ГЉ','Г•Г‚  ','Г•Г‚ГѓГ‚','Г•Г‚ГЋГ„')
   and oa.saldo<>0
  
 
-group by ml.occ,case oa.service_id when 'ХВГВ' then 'ХВОД' when 'ХВВК' then 'ХВ  ' when 'ХВП ' then 'ИТГВ'
-                when 'КИГВ' then 'КанИ' when 'КГГВ' then 'КанГ' when 'КХГВ' then 'КанХ'
+group by ml.occ,case oa.service_id when 'Г•Г‚ГѓГ‚' then 'Г•Г‚ГЋГ„' when 'Г•Г‚Г‚ГЉ' then 'Г•Г‚  ' when 'Г•Г‚ГЏ ' then 'Г€Г’ГѓГ‚'
+                when 'ГЉГ€ГѓГ‚' then 'ГЉГ Г­Г€' when 'ГЉГѓГѓГ‚' then 'ГЉГ Г­Гѓ' when 'ГЉГ•ГѓГ‚' then 'ГЉГ Г­Г•'
                 else oa.service_id end
   order by ml.occ
   
@@ -216,12 +216,12 @@ OPEN cOcc
 	BEGIN 
 	--print 'LS '+cast(@occ as varchar(15))+' srv '+cast(@servid as varchar(5))+' sald '+cast(@saldo as varchar(15))
 	set @servid=case @servid 
-	when 'ХВОД' then 'одхв'
-	when 'ХВ  ' then 'хвод'
-	when 'ИТГВ' then '1019'
-	when 'КанИ' then '1021'
-	when 'КанГ' then '1013'
-	when 'КанХ' then '1012'
+	when 'Г•Г‚ГЋГ„' then 'Г®Г¤ГµГў'
+	when 'Г•Г‚  ' then 'ГµГўГ®Г¤'
+	when 'Г€Г’ГѓГ‚' then '1019'
+	when 'ГЉГ Г­Г€' then '1021'
+	when 'ГЉГ Г­Гѓ' then '1013'
+	when 'ГЉГ Г­Г•' then '1012'
 	
 	else @servid
 	 end
@@ -241,12 +241,12 @@ OPEN cOcc
          from [it_gh].[dbo].OCC_ACCOUNTS oa
          where oa.OCC_ID=@occ and oa.SERVICE_ID=@nservid 
          
-             update [it_gh].[dbo].occupations --Неэффективно конечно каждый раз дергать
+             update [it_gh].[dbo].occupations --ГЌГҐГЅГґГґГҐГЄГІГЁГўГ­Г® ГЄГ®Г­ГҐГ·Г­Г® ГЄГ Г¦Г¤Г»Г© Г°Г Г§ Г¤ГҐГ°ГЈГ ГІГј
     set saldo=(select SUM(saldo) from OCC_ACCOUNTS where OCC_ID=@occ)
     where id=@occ;
 
      
-   -- exec [it_gh].[dbo].ad_SetTechCorrectWitchDoc @occ,@nservid,45,@saldo      -- 15 - Номер док получить по exec ad_GetDocsList 1
+   -- exec [it_gh].[dbo].ad_SetTechCorrectWitchDoc @occ,@nservid,45,@saldo      -- 15 - ГЌГ®Г¬ГҐГ° Г¤Г®ГЄ ГЇГ®Г«ГіГ·ГЁГІГј ГЇГ® exec ad_GetDocsList 1
     Commit Transaction tran1
     End Try
      Begin Catch
@@ -264,10 +264,10 @@ OPEN cOcc
     END;  
 		
 CLOSE cOcc
-DEALLOCATE cOcc  	--После всего надо перерасчет запустить	
+DEALLOCATE cOcc  	--ГЏГ®Г±Г«ГҐ ГўГ±ГҐГЈГ® Г­Г Г¤Г® ГЇГҐГ°ГҐГ°Г Г±Г·ГҐГІ Г§Г ГЇГіГ±ГІГЁГІГј	
 -------------------
 ------------------------
----- ТО
+---- Г’ГЋ
 use it_gh
 set nocount on
 DECLARE	
@@ -292,7 +292,7 @@ from
   inner join [it_gh].dbo.TECH_SUBDIVISIONS t on t.ID=b.TECHSUBDIV_ID    
   where t.IS_HISTORY=1 
  and b.TECHSUBDIV_ID in (41,91) 
- and oa.service_id in ('ТО  ')
+ and oa.service_id in ('Г’ГЋ  ')
   and oa.saldo<>0
  
 
@@ -306,7 +306,7 @@ OPEN cOcc
 	BEGIN 
 	--print 'LS '+cast(@occ as varchar(15))+' srv '+cast(@servid as varchar(5))+' sald '+cast(@saldo as varchar(15))
 	set @servid=case @servid 
-	when 'ТО  ' then '1000'
+	when 'Г’ГЋ  ' then '1000'
 		
 	else @servid
 	 end
@@ -326,12 +326,12 @@ OPEN cOcc
          from [it_gh].[dbo].OCC_ACCOUNTS oa
          where oa.OCC_ID=@occ and oa.SERVICE_ID=@nservid 
          
-             update [it_gh].[dbo].occupations --Неэффективно конечно каждый раз дергать
+             update [it_gh].[dbo].occupations --ГЌГҐГЅГґГґГҐГЄГІГЁГўГ­Г® ГЄГ®Г­ГҐГ·Г­Г® ГЄГ Г¦Г¤Г»Г© Г°Г Г§ Г¤ГҐГ°ГЈГ ГІГј
     set saldo=(select SUM(saldo) from OCC_ACCOUNTS where OCC_ID=@occ)
     where id=@occ;
 
      
-   -- exec [it_gh].[dbo].ad_SetTechCorrectWitchDoc @occ,@nservid,45,@saldo      -- 15 - Номер док получить по exec ad_GetDocsList 1
+   -- exec [it_gh].[dbo].ad_SetTechCorrectWitchDoc @occ,@nservid,45,@saldo      -- 15 - ГЌГ®Г¬ГҐГ° Г¤Г®ГЄ ГЇГ®Г«ГіГ·ГЁГІГј ГЇГ® exec ad_GetDocsList 1
     Commit Transaction tran1
     End Try
      Begin Catch
@@ -349,4 +349,4 @@ OPEN cOcc
     END;  
 		
 CLOSE cOcc
-DEALLOCATE cOcc  	--После всего надо перерасчет запустить	
+DEALLOCATE cOcc  	--ГЏГ®Г±Г«ГҐ ГўГ±ГҐГЈГ® Г­Г Г¤Г® ГЇГҐГ°ГҐГ°Г Г±Г·ГҐГІ Г§Г ГЇГіГ±ГІГЁГІГј	
