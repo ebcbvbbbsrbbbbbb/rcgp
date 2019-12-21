@@ -1,4 +1,4 @@
-use it_gh
+п»їuse it_gh
 SELECT  o.id
 from occupations o
   inner join FLATS f on f.ID=o.flat_id
@@ -9,7 +9,7 @@ and
  exists(select oa.OCC_ID, sum((oa.SALDO-pl.PAID+pl.ADDED+oa.penalty)) from OCC_ACCOUNTS oa
   inner join CONSMODES_LIST cl on cl.OCC_ID=oa.OCC_ID and cl.SERVICE_ID=oa.SERVICE_ID 
   inner join PAYM_LIST pl on pl.OCC_ID=oa.OCC_ID and pl.TYPE_ID=oa.SERVICE_ID
-  inner join PROPERTY_LIST prl on prl.PROPERTY_ID = 'плат' and prl.OBJECT_IDC=oa.SERVICE_ID
+  inner join PROPERTY_LIST prl on prl.PROPERTY_ID = 'РїР»Р°С‚' and prl.OBJECT_IDC=oa.SERVICE_ID
   where  
   cl.MANAGEMENT_COMPANY_ID=32 
   --and (oa.SALDO-pl.PAID+pl.ADDED)>0 
@@ -42,7 +42,7 @@ and
  oa.OCC_ID=o.id and oa.SERVICE_ID in 
              (--d1
              '1022','1023','1024','1025','1026','1027','1028','1029','1030','1031','1032','1033','1034','1035','1036',
-  '1037','1038','1039','1040','1041','1042','1043','д1от','д1по','д1хп','д1до','д1нк','д1оп','д1хо'
+  '1037','1038','1039','1040','1041','1042','1043','Рґ1РѕС‚','Рґ1РїРѕ','Рґ1С…Рї','Рґ1РґРѕ','Рґ1РЅРє','Рґ1РѕРї','Рґ1С…Рѕ'
  -- d2 
  --,
   --'1044','1045','1046','1047','1048','1049','1050','1051','1052','1053','1054','1055','1056','1057','1058',
@@ -59,7 +59,7 @@ and
 order by b.STREET_ID,b.BLDN_NO,f.FLAT_NO  
 
 ---------------
--------В недолговых ушедших домах на основных услугах
+-------Р’ РЅРµРґРѕР»РіРѕРІС‹С… СѓС€РµРґС€РёС… РґРѕРјР°С… РЅР° РѕСЃРЅРѕРІРЅС‹С… СѓСЃР»СѓРіР°С…
 ------------------
 select o.ID,x.NAME ULICA,b.BLDN_NO DOM,f.FLAT_NO KV
   from occupations o
@@ -68,13 +68,13 @@ select o.ID,x.NAME ULICA,b.BLDN_NO DOM,f.FLAT_NO KV
   inner join TECH_SUBDIVISIONS t on t.ID=b.TECHSUBDIV_ID    
   inner join XSTREETS x on  x.ID=b.STREET_ID
   where t.IS_HISTORY=1 and b.TECHSUBDIV_ID=50
- and b.id not in (691017,1220004,1840004,1790004,5160047,2120019,5470007,5470008,770018,5160004,5981016,2990005,2992031,3180038,3900005,5980021,1060013,700006,1970020,2070005,3251026,3530003,5141062) --расселенные дома, некуда носить квитанции
+ and b.id not in (691017,1220004,1840004,1790004,5160047,2120019,5470007,5470008,770018,5160004,5981016,2990005,2992031,3180038,3900005,5980021,1060013,700006,1970020,2070005,3251026,3530003,5141062) --СЂР°СЃСЃРµР»РµРЅРЅС‹Рµ РґРѕРјР°, РЅРµРєСѓРґР° РЅРѕСЃРёС‚СЊ РєРІРёС‚Р°РЅС†РёРё
   and not exists (select 1 from CONSMODES_LIST cl 
               inner join PAYM_LIST pl on pl.OCC_ID=o.ID and pl.TYPE_ID=cl.SERVICE_ID
              where cl.OCC_ID=o.ID and cl.MODE_ID % 1000<>0 
              and pl.VALUE<>0               
              )  
-  and not exists (select 1 from -- Нет начислений во всем доме
+  and not exists (select 1 from -- РќРµС‚ РЅР°С‡РёСЃР»РµРЅРёР№ РІРѕ РІСЃРµРј РґРѕРјРµ
     occupations o2
   inner join FLATS f2 on f2.ID=o2.flat_id
   inner join CONSMODES_LIST cl2 on cl2.OCC_ID=o2.id
@@ -87,8 +87,8 @@ and exists(select oa.OCC_ID, sum((oa.SALDO-pl.PAID+pl.ADDED)) from OCC_ACCOUNTS 
   inner join PAYM_LIST pl on pl.OCC_ID=oa.OCC_ID and pl.TYPE_ID=oa.SERVICE_ID
  where oa.OCC_ID=o.id
  and oa.SERVICE_ID in('1004','1006','1008','1009','1012','1013','1014','1015','1016','1017','1019','1020','1021',
-    '2008','анте','вывм','капр','лифт','найм','освл','отоп','пгаз','хвод','элво','элек','элпл','кх54','хв54','взно',
-    'вптс','одхв','хпод','пдод','ипод','иход','элод','домф','заэл','удве','загв','зхвс','зкан','ремэ','упящ','дото','дпод','дхвп')
+    '2008','Р°РЅС‚Рµ','РІС‹РІРј','РєР°РїСЂ','Р»РёС„С‚','РЅР°Р№Рј','РѕСЃРІР»','РѕС‚РѕРї','РїРіР°Р·','С…РІРѕРґ','СЌР»РІРѕ','СЌР»РµРє','СЌР»РїР»','РєС…54','С…РІ54','РІР·РЅРѕ',
+    'РІРїС‚СЃ','РѕРґС…РІ','С…РїРѕРґ','РїРґРѕРґ','РёРїРѕРґ','РёС…РѕРґ','СЌР»РѕРґ','РґРѕРјС„','Р·Р°СЌР»','СѓРґРІРµ','Р·Р°РіРІ','Р·С…РІСЃ','Р·РєР°РЅ','СЂРµРјСЌ','СѓРїСЏС‰','РґРѕС‚Рѕ','РґРїРѕРґ','РґС…РІРї')
  group by oa.OCC_ID   
  having sum((oa.SALDO-pl.PAID+pl.ADDED))>0 
   )            
@@ -126,7 +126,7 @@ and
  (oa.SALDO-pl.PAID+pl.ADDED)>0 and
  oa.OCC_ID=o.id and oa.SERVICE_ID in 
              ('1000','1004','1006','1008','1009','1012','1013','1014','1015','1016','1017','1019','1020','1021',
-              '2008','анте','вывм','капр','лифт','найм','освл','отоп','пгаз','хвод','элво','элек','элпл','кх54','хв54'
+              '2008','Р°РЅС‚Рµ','РІС‹РІРј','РєР°РїСЂ','Р»РёС„С‚','РЅР°Р№Рј','РѕСЃРІР»','РѕС‚РѕРї','РїРіР°Р·','С…РІРѕРґ','СЌР»РІРѕ','СЌР»РµРє','СЌР»РїР»','РєС…54','С…РІ54'
              )
        )
 order by b.STREET_ID,b.BLDN_NO,
