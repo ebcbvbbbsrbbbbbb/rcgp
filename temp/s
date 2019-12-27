@@ -1,0 +1,49 @@
+  public static void FileSearch(string folderpath, string filename, string searchstring, bool fnameRegexp, bool stringRegexp, Delegate statusSetter, TreeView tv, Dispatcher d)
+        { 
+            void AddNode(string filepath)
+            {
+                string[] pathParts = filepath.Split('\\');
+                
+                var currentNode = tv.Nodes;
+                int i = 0;
+                void recursionAddNode()
+                {
+                    
+                    while (i < pathParts.Count())
+
+                    {
+                        if (currentNode.IndexOfKey(pathParts[i]) == -1)
+                        {
+                            currentNode.Add(pathParts[i], pathParts[i]);
+                            var p = currentNode.IndexOfKey(pathParts[i]);
+                            currentNode = currentNode[p].Nodes;
+                            i++;
+                        }
+                        else
+                        {
+                            var p = currentNode.IndexOfKey(pathParts[i]);
+                            currentNode = currentNode[p].Nodes;
+                            i++;
+                            recursionAddNode();
+                        }
+
+                    }
+                }
+                recursionAddNode();
+            }
+                try
+                {
+                    List<string> Files = Directory.GetFiles(folderpath, filename, SearchOption.AllDirectories).ToList();
+                    foreach (string s in Files)
+                    {
+
+                        d.Invoke(() => statusSetter.DynamicInvoke(s));
+                        d.Invoke(() => AddNode(s));
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+        }
